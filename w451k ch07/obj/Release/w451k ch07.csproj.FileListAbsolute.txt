@@ -1,0 +1,14 @@
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\bin\Release\w451k ch07.exe.config
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\bin\Release\w451k ch07.exe
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\bin\Release\w451k ch07.pdb
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\obj\Release\w451k ch07.csproj.CoreCompileInputs.cache
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\obj\Release\w451k ch07.exe
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\obj\Release\w451k ch07.pdb
+C:\Users\darre\source\repos\w451k ch07\w451k ch07\obj\Release\w451k ch07.csprojAssemblyReference.cache
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\bin\Release\w451k ch07.exe.config
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\bin\Release\w451k ch07.exe
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\bin\Release\w451k ch07.pdb
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.csprojAssemblyReference.cache
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.csproj.CoreCompileInputs.cache
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.exe
+C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.pdb
