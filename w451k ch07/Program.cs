@@ -16,7 +16,7 @@ namespace w451k_ch07
             for (int i = 120; ; )
             {
 
-            zzzz.drawRectangle(new Triangle2(new Line2(100, 120, 180, 120), new Line2(180, 120, 160, i)), new Triangle2(new Line2(160, i, 120, i), new Line2(120, i, 100, 120)));
+            zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
             System.Threading.Thread.Sleep(10);
             zzzz.renderFastAsFuck();
 
