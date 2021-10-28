@@ -63,10 +63,10 @@ namespace w451k_ch07
             }
         }
 
-        public void plotLineLow(Vector2 v1, Vector2 v2)
+        public void plotLineLow(Line2 line)
         {
-            int dx = v2.x - v1.x,
-                dy = v2.y - v1.y,
+            int dx = line.v2.x - line.v1.x,
+                dy = line.v2.y - line.v1.y,
                 yi = 1,
                 D, y;
             if(dy < 0)
@@ -75,8 +75,8 @@ namespace w451k_ch07
                 dy = -dy;
             }
             D = (2 * dy) - dx;
-            y = v1.y;
-            for (int x = v1.x; x < v2.x; x++)
+            y = line.v1.y;
+            for (int x = line.v1.x; x < line.v2.x; x++)
             {
                 loadOnScreen(new int[,] { { x,y} });
                 if (D > 0)
@@ -93,10 +93,10 @@ namespace w451k_ch07
       
         }
 
-        public void plotLineHigh(Vector2 v1, Vector2 v2)
+        public void plotLineHigh(Line2 line)
         {
-            int dx = v2.x - v1.x,
-                dy = v2.y - v1.y,
+            int dx = line.v2.x - line.v1.x,
+                dy = line.v2.y - line.v1.y,
                 xi = 1,
                 D, x;
             if (dx < 0)
@@ -105,8 +105,8 @@ namespace w451k_ch07
                 dx = -dx;
             }
             D = (2 * dx) - dy;
-            x = v1.x;
-            for (int y = v1.y; y < v2.y; y++)
+            x = line.v1.x;
+            for (int y = line.v1.y; y < line.v2.y; y++)
             {
                 loadOnScreen(new int[,] { { x,y } });
                 if (D > 0)
@@ -168,42 +168,42 @@ namespace w451k_ch07
             }
         }
 
-        public void plotLine(Vector2 v1, Vector2 v2)
+        public void plotLine(Line2 line)
         {
-            if(Math.Abs(v2.y - v1.y) < Math.Abs(v2.x - v1.x))
+            if(Math.Abs(line.v2.y - line.v1.y) < Math.Abs(line.v2.x - line.v1.x))
             {
-                if(v2.y == v1.y)
+                if(line.v2.y == line.v1.y)
                 {
-                      plotHorizontalLine(v1.x, v2.x, v1.y);
+                      plotHorizontalLine(line.v1.x, line.v2.x, line.v1.y);
 
                     return;
                 }
-                if(v1.x > v2.x)
+                if(line.v1.x > line.v2.x)
                 {
-                    plotLineLow(v2, v1);
+                    plotLineLow(new Line2(line.v2, line.v1));
                 }
                 else
                 {
-                    plotLineLow(v1, v2);
+                    plotLineLow(new Line2(line.v1, line.v2));
                 }
 
             }
             else
             {
-                if (v2.x == v1.x)
+                if (line.v2.x == line.v1.x)
                 {
 
-                        plotVerticalLine(v1.y, v2.y, v1.x);
+                        plotVerticalLine(line.v1.y, line.v2.y, line.v1.x);
 
                     return;
                 }
-                if (v1.y > v2.y)
+                if (line.v1.y > line.v2.y)
                 {
-                    plotLineHigh(v2, v1);
+                    plotLineHigh(new Line2(line.v2, line.v1));
                 }
                 else
                 {
-                    plotLineHigh(v1, v2);
+                    plotLineHigh(new Line2(line.v1, line.v2));
                 }
             }
 
@@ -258,16 +258,33 @@ namespace w451k_ch07
             }
         }
 
-        public void drawRectangle(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+        public void drawRectangleRaw(Pane2 p)
         {
-            plotLine(v1, v2);
-            plotLine(v2, v3);
-            plotLine(v3, v4);
-            plotLine(v4, v1);
-            int[] x = { v1.x, v2.x, v3.x, v4.x };
-            int[] y = { v1.y, v2.y, v3.y, v4.y };
+            plotLine(p.l1);
+            plotLine(p.l2);
+            plotLine(p.l3);
+            plotLine(p.l4);
+            int[] x = { p.l1.v1.x, p.l2.v1.x, p.l3.v1.x, p.l4.v1.x };
+            int[] y = { p.l1.v1.y, p.l2.v1.y, p.l3.v1.y, p.l4.v1.y };
             FillSimple(new Vector2(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2)));
 
+        }
+
+        public void drawRectangle(Triangle2 t1, Triangle2 t2)
+        {
+            plotLine(t1.l1);
+            plotLine(t1.l2);
+            plotLine(t1.l3);
+            plotLine(t2.l1);
+            plotLine(t2.l2);
+            plotLine(t2.l3);
+        }
+
+        public void drawTriangle(Triangle2 t)
+        {
+            plotLine(t.l1);
+            plotLine(t.l2);
+            plotLine(t.l3);
         }
 
         public void drawXgon(Vector2[] points)

@@ -8,9 +8,9 @@ namespace w451k_ch07
 {
     class Triangle2
     {
-        Line2 l1;
-        Line2 l2;
-        Line2 l3;
+        public Line2 l1;
+        public Line2 l2;
+        public Line2 l3;
 
         Triangle2(Line2 l1, Line2 l2, Line2 l3)
         {
