@@ -16,7 +16,7 @@ namespace w451k_ch07
             {
                 zzzz.drawRectangle(new Triangle2(new Line2(25, 30, 45, 30), new Line2(45, 30, 40, i)), new Triangle2(new Line2(40, i, 30, i), new Line2(30, i, 25, 30)));
                 zzzz.renderFrame();
-                System.Threading.Thread.Sleep(5);
+                System.Threading.Thread.Sleep(10);
                 if (i == 40) rise = false;
                 if (i == 20) rise = true;
                 if (rise) i++;

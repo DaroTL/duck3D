@@ -13,6 +13,9 @@ namespace w451k_ch07
                     contour = '#';
 
         public char[,] screen = new char[50,100];
+        public char[,] bufforDelScreen = new char[50, 100];
+        public char[,] bufforAddScreen = new char[50, 100];
+
 
         public Renderer()
         {
@@ -39,14 +42,14 @@ namespace w451k_ch07
             {
                 screen[thing[i,0],thing[i,1]] = contour;
             }
-            Console.Clear();
+           
             for (int i = 0; i < screen.GetLength(0); i++)
             {
                 for (int z = 0; z < screen.GetLength(1); z++)
                 {
-                    Console.Write(screen[i, z]);
+                    FastConsole.Write("" + screen[i, z]);
                 }
-                Console.WriteLine();
+                FastConsole.WriteLine("");
             }
         }
 
@@ -65,7 +68,7 @@ namespace w451k_ch07
 
         public void renderFrame()
         {
-            Console.Clear();
+            
 
             for (int i = 0; i < screen.GetLength(0); i++)
             {
@@ -162,7 +165,9 @@ namespace w451k_ch07
                 for (int x = x2; x <= x1; x++)
                 {
                     loadOnScreen(new int[,] { { x, y } });
-                    Console.WriteLine(x);
+                    
+
+
                    
                 }
             }
