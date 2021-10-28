@@ -296,11 +296,11 @@ namespace w451k_ch07
                 {
                     if(m != points.GetLength(0) - 1)
                     {
-                         plotLine(points[m], points[m + 1]);
+                         plotLine(new Line2(points[m], points[m + 1]));
                     }
                     else
                     {
-                        plotLine(points[m], points[0]);
+                        plotLine(new Line2(points[m], points[0]));
                     }
 
                     x[m] = points[m].x;

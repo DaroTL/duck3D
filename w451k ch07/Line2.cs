@@ -16,5 +16,10 @@ namespace w451k_ch07
             this.v1 = v1;
             this.v2 = v2;
         }
+        public Line2(int x1, int y1, int x2, int y2)
+        {
+            this.v1 = new Vector2(x1, y1);
+            this.v2 = new Vector2(x2, y2);
+        }
     }
 }

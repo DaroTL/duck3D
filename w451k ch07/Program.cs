@@ -12,7 +12,8 @@ namespace w451k_ch07
         {
             Renderer zzzz = new Renderer();
 
-            zzzz.plotLine(new Vector2(20, 20), new Vector2(10,10));
+ 
+            zzzz.drawRectangle(new Triangle2(new Line2(10, 10, 20, 10), new Line2(20, 10, 20, 20)), new Triangle2(new Line2(20, 20, 10, 20), new Line2(10, 20, 10, 10)));
             zzzz.render();
 //             for(; ; )
 //             {
