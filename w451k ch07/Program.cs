@@ -11,26 +11,29 @@ namespace w451k_ch07
         static void Main(string[] args)
         {
             Renderer zzzz = new Renderer();
+            
             bool rise = true;
-            for (int i = 30; ; )
+            for (int i = 120; ; )
             {
-                zzzz.drawRectangle(new Triangle2(new Line2(25, 30, 45, 30), new Line2(45, 30, 40, i)), new Triangle2(new Line2(40, i, 30, i), new Line2(30, i, 25, 30)));
-                zzzz.renderFrame();
-                System.Threading.Thread.Sleep(10);
-                if (i == 40) rise = false;
-                if (i == 20) rise = true;
-                if (rise) i++;
-                else i--;
+
+            zzzz.drawRectangle(new Triangle2(new Line2(100, 120, 180, 120), new Line2(180, 120, 160, i)), new Triangle2(new Line2(160, i, 120, i), new Line2(120, i, 100, 120)));
+            System.Threading.Thread.Sleep(10);
+            zzzz.renderFastAsFuck();
+
+                 if (i == 300) rise = false;
+                 if (i == 20) rise = true;
+                 if (rise) i++;
+                 else i--;
             }
 
-//             for(; ; )
-//             {
-//                 String command = Console.ReadLine();
-//                 switch (command)
-//                 {
-// 
-//                 }
-//             }
+            for(; ; )
+            {
+                String command = Console.ReadLine();
+                switch (command)
+                {
+
+                }
+            }
             int[] pen = usePen();
 
 
