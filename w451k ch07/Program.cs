@@ -12,13 +12,13 @@ namespace w451k_ch07
         {
             Renderer zzzz = new Renderer();
             bool rise = true;
-            for (int i = 10; ; )
+            for (int i = 30; ; )
             {
-                zzzz.drawRectangle(new Triangle2(new Line2(10, 10, 20, 10), new Line2(20, 10, 20, i)), new Triangle2(new Line2(20, i, 10, i), new Line2(10, i, 10, 10)));
+                zzzz.drawRectangle(new Triangle2(new Line2(25, 30, 45, 30), new Line2(45, 30, 40, i)), new Triangle2(new Line2(40, i, 30, i), new Line2(30, i, 25, 30)));
                 zzzz.renderFrame();
                 System.Threading.Thread.Sleep(5);
-                if (i == 20) rise = false;
-                if (i == 10) rise = true;
+                if (i == 40) rise = false;
+                if (i == 20) rise = true;
                 if (rise) i++;
                 else i--;
             }
