@@ -63,10 +63,10 @@ namespace w451k_ch07
             }
         }
 
-        public void plotLineLow(int x1, int y1, int x2, int y2)
+        public void plotLineLow(Vector2 v1, Vector2 v2)
         {
-            int dx = x2 - x1,
-                dy = y2 - y1,
+            int dx = v2.x - v1.x,
+                dy = v2.y - v1.y,
                 yi = 1,
                 D, y;
             if(dy < 0)
@@ -75,8 +75,8 @@ namespace w451k_ch07
                 dy = -dy;
             }
             D = (2 * dy) - dx;
-            y = y1;
-            for (int x = x1; x < x2; x++)
+            y = v1.y;
+            for (int x = v1.x; x < v2.x; x++)
             {
                 loadOnScreen(new int[,] { { x,y} });
                 if (D > 0)
@@ -93,10 +93,10 @@ namespace w451k_ch07
       
         }
 
-        public void plotLineHigh(int x1, int y1, int x2, int y2)
+        public void plotLineHigh(Vector2 v1, Vector2 v2)
         {
-            int dx = x2 - x1,
-                dy = y2 - y1,
+            int dx = v2.x - v1.x,
+                dy = v2.y - v1.y,
                 xi = 1,
                 D, x;
             if (dx < 0)
@@ -105,8 +105,8 @@ namespace w451k_ch07
                 dx = -dx;
             }
             D = (2 * dx) - dy;
-            x = x1;
-            for (int y = y1; y < y2; y++)
+            x = v1.x;
+            for (int y = v1.y; y < v2.y; y++)
             {
                 loadOnScreen(new int[,] { { x,y } });
                 if (D > 0)
@@ -168,109 +168,109 @@ namespace w451k_ch07
             }
         }
 
-        public void plotLine(int x1, int y1, int x2, int y2)
+        public void plotLine(Vector2 v1, Vector2 v2)
         {
-            if(Math.Abs(y2 - y1) < Math.Abs(x2 - x1))
+            if(Math.Abs(v2.y - v1.y) < Math.Abs(v2.x - v1.x))
             {
-                if(y2 == y1)
+                if(v2.y == v1.y)
                 {
-                      plotHorizontalLine(x1, x2, y1);
+                      plotHorizontalLine(v1.x, v2.x, v1.y);
 
                     return;
                 }
-                if(x1 > x2)
+                if(v1.x > v2.x)
                 {
-                    plotLineLow(x2, y2, x1, y1);
+                    plotLineLow(v2, v1);
                 }
                 else
                 {
-                    plotLineLow(x1, y1, x2, y2);
+                    plotLineLow(v1, v2);
                 }
 
             }
             else
             {
-                if ( x2 == x1)
+                if (v2.x == v1.x)
                 {
 
-                        plotVerticalLine(y1, y2, x1);
+                        plotVerticalLine(v1.y, v2.y, v1.x);
 
                     return;
                 }
-                if (y1 > y2)
+                if (v1.y > v2.y)
                 {
-                    plotLineHigh(x2, y2, x1, y1);
+                    plotLineHigh(v2, v1);
                 }
                 else
                 {
-                    plotLineHigh(x1, y1, x2, y2);
+                    plotLineHigh(v1, v2);
                 }
             }
 
 
         }
 
-        public void FillSimple(int x, int y)
+        public void FillSimple(Vector2 v)
         {
-            if (screen[x, y] != contour && screen[x,y] != fill)
+            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
             {
-                screen[x, y] = fill;
-                FillSimple(x + 1, y);
-                FillSimple(x, y + 1);
-                FillSimple(x - 1, y);
-                FillSimple(x, y - 1);
+                screen[v.x, v.y] = fill;
+                FillSimple(new Vector2(v.x + 1, v.y));
+                FillSimple(new Vector2(v.x, v.y + 1));
+                FillSimple(new Vector2(v.x - 1, v.y));
+                FillSimple(new Vector2(v.x, v.y - 1));
                 
             }
         }
 
-        public void dFillSimple(int x, int y)
+        public void dFillSimple(Vector2 v)
         {
-            Console.WriteLine(x + " " + y + screen[x, y]);
-            if (screen[x, y] != contour && screen[x, y] != fill)
+            Console.WriteLine(v.x + " " + v.y + screen[v.x, v.y]);
+            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
             {
-                screen[x, y] = fill;
+                screen[v.x, v.y] = fill;
                 String asodfjfoas = Console.ReadLine();
                 render();
-                Console.WriteLine(x + " " + y);
+                Console.WriteLine(v.x + " " + v.y);
 
-                dFillSimple(x + 1, y);
-                dFillSimple(x, y + 1);
-                dFillSimple(x - 1, y);
-                dFillSimple(x, y - 1);
+                dFillSimple(new Vector2(v.x + 1, v.y));
+                dFillSimple(new Vector2(v.x, v.y + 1));
+                dFillSimple(new Vector2(v.x - 1, v.y));
+                dFillSimple(new Vector2(v.x, v.y - 1));
 
             }
         }
 
-        public void Fill8(int x, int y)
+        public void Fill8(Vector2 v)
         {
-            if (screen[x, y] != contour && screen[x, y] != fill)
+            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
             {
-                screen[x, y] = fill;
-                Fill8(x + 1, y);
-                Fill8(x, y + 1);
-                Fill8(x - 1, y);
-                Fill8(x, y - 1);
-                Fill8(x - 1, y - 1);
-                Fill8(x - 1, y + 1);
-                Fill8(x + 1, y - 1);
-                Fill8(x + 1, y + 1);
+                screen[v.x, v.y] = fill;
+                Fill8(new Vector2(v.x + 1, v.y));
+                Fill8(new Vector2(v.x, v.y + 1));
+                Fill8(new Vector2(v.x - 1, v.y));
+                Fill8(new Vector2(v.x, v.y - 1));
+                Fill8(new Vector2(v.x - 1, v.y - 1));
+                Fill8(new Vector2(v.x - 1, v.y + 1));
+                Fill8(new Vector2(v.x + 1, v.y - 1));
+                Fill8(new Vector2(v.x + 1, v.y + 1));
 
             }
         }
 
-        public void drawRectangle(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
+        public void drawRectangle(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
         {
-            plotLine(x1, y1, x2, y2);
-            plotLine(x2, y2, x3, y3);
-            plotLine(x3, y3, x4, y4);
-            plotLine(x4, y4, x1, y1);
-            int[] x = { x1, x2, x3, x4 };
-            int[] y = { y1, y2, y3, y4 };
-            FillSimple(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2));
+            plotLine(v1, v2);
+            plotLine(v2, v3);
+            plotLine(v3, v4);
+            plotLine(v4, v1);
+            int[] x = { v1.x, v2.x, v3.x, v4.x };
+            int[] y = { v1.y, v2.y, v3.y, v4.y };
+            FillSimple(new Vector2(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2)));
 
         }
 
-        public void drawXgon(int[,] points)
+        public void drawXgon(Vector2[] points)
         {
             if(points.GetLength(0) > 2)
             {
@@ -279,15 +279,15 @@ namespace w451k_ch07
                 {
                     if(m != points.GetLength(0) - 1)
                     {
-                        plotLine(points[m, 0], points[m, 1], points[m + 1, 0], points[m + 1, 1]);
+                         plotLine(points[m], points[m + 1]);
                     }
                     else
                     {
-                        plotLine(points[m, 0], points[m, 1], points[0, 0], points[0, 1]);
+                        plotLine(points[m], points[0]);
                     }
 
-                    x[m] = points[m, 0];
-                    y[m] = points[m, 1];
+                    x[m] = points[m].x;
+                    y[m] = points[m].y;
                 }
                  
             }

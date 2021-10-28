@@ -12,7 +12,7 @@ namespace w451k_ch07
         {
             Renderer zzzz = new Renderer();
 
-            //             x.plotLine(20, 20, 10, 20);
+            zzzz.plotLine(new Vector2(20, 20), new Vector2(10,10));
             zzzz.render();
 //             for(; ; )
 //             {
