@@ -63,6 +63,28 @@ namespace w451k_ch07
             }
         }
 
+        public void renderFrame()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < screen.GetLength(0); i++)
+            {
+
+                for (int z = 0; z < screen.GetLength(1); z++)
+                {
+                    Console.Write(screen[i, z]);
+                }
+                Console.WriteLine();
+            }
+            for (int u = 0; u < screen.GetLength(0); u++)
+            {
+                for (int z = 0; z < screen.GetLength(1); z++)
+                {
+                    screen[u, z] = background;
+                }
+            }
+        }
+
         public void plotLineLow(Line2 line)
         {
             int dx = line.v2.x - line.v1.x,

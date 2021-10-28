@@ -11,10 +11,18 @@ namespace w451k_ch07
         static void Main(string[] args)
         {
             Renderer zzzz = new Renderer();
+            bool rise = true;
+            for (int i = 10; ; )
+            {
+                zzzz.drawRectangle(new Triangle2(new Line2(10, 10, 20, 10), new Line2(20, 10, 20, i)), new Triangle2(new Line2(20, i, 10, i), new Line2(10, i, 10, 10)));
+                zzzz.renderFrame();
+                System.Threading.Thread.Sleep(1);
+                if (i == 20) rise = false;
+                if (i == 10) rise = true;
+                if (rise) i++;
+                else i--;
+            }
 
- 
-            zzzz.drawRectangle(new Triangle2(new Line2(10, 10, 20, 10), new Line2(20, 10, 20, 20)), new Triangle2(new Line2(20, 20, 10, 20), new Line2(10, 20, 10, 10)));
-            zzzz.render();
 //             for(; ; )
 //             {
 //                 String command = Console.ReadLine();
