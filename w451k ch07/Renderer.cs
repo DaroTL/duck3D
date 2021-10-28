@@ -72,9 +72,10 @@ namespace w451k_ch07
 
                 for (int z = 0; z < screen.GetLength(1); z++)
                 {
-                    Console.Write(screen[i, z]);
+                    
+                    FastConsole.Write("" + screen[i, z]);
                 }
-                Console.WriteLine();
+                FastConsole.WriteLine("");
             }
             for (int u = 0; u < screen.GetLength(0); u++)
             {
@@ -83,6 +84,7 @@ namespace w451k_ch07
                     screen[u, z] = background;
                 }
             }
+            FastConsole.Flush();
         }
 
         public void plotLineLow(Line2 line)
