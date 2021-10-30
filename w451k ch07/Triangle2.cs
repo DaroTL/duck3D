@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace w451k_ch07
 {
+ 
     class Triangle2
     {
         public Line2 l1;
