@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace w451k_ch07
 {
-    class Line3
+    public class Line3
     {
         public Vector3 v1;
         public Vector3 v2;

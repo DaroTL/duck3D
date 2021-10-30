@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace w451k_ch07
 {
-    class Cube3
+    public class Cube3
     {
         public Pane3 p1;
         public Pane3 p2;

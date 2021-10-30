@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace w451k_ch07
 {
-    class Cube2
+    public class Cube2
     {
         public Pane2 p1;
         public Pane2 p2;
@@ -24,5 +24,6 @@ namespace w451k_ch07
             this.p5 = p5;
             this.p6 = p6;
         }
+
     }
 }

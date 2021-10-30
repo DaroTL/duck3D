@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace w451k_ch07
 {
-    class Line2
+    public class Line2
     {
         public Vector2 v1;
         public Vector2 v2;
@@ -21,5 +21,12 @@ namespace w451k_ch07
             this.v1 = new Vector2(x1, y1);
             this.v2 = new Vector2(x2, y2);
         }
+        
+        public static Line2 convertLine3(Line3 line3)
+        {
+            Line2 newLine = new Line2(Vector2.convertVector3(line3.v1), Vector2.convertVector3(line3.v2));
+            return newLine;
+        }
+        
     }
 }

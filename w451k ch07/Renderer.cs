@@ -5,16 +5,16 @@ using System.Linq;
 
 namespace w451k_ch07
 {
-    class Renderer
+    public class Renderer
     {
 
         public char background = ' ',
                     fill = '+',
                     contour = '#';
 
-        public char[,] screen = new char[50,100];
-        public char[,] bufforDelScreen = new char[50, 100];
-        public char[,] bufforAddScreen = new char[50, 100];
+        public char[,] screen = new char[500,1000];
+        public char[,] bufforDelScreen = new char[500, 1000];
+        public char[,] bufforAddScreen = new char[500, 1000];
 
 
         public Renderer()
@@ -295,7 +295,7 @@ namespace w451k_ch07
             plotLine(p.l4);
             int[] x = { p.l1.v1.x, p.l2.v1.x, p.l3.v1.x, p.l4.v1.x };
             int[] y = { p.l1.v1.y, p.l2.v1.y, p.l3.v1.y, p.l4.v1.y };
-            FillSimple(new Vector2(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2)));
+            //FillSimple(new Vector2(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2)));
 
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace w451k_ch07
 {
-    class Vector2
+    public class Vector2
     {
         public int x;
         public int y;
@@ -15,6 +15,14 @@ namespace w451k_ch07
         {
             this.x = x;
             this.y = y;
+        }
+
+        public static Vector2 convertVector3(Vector3 vector)
+        {
+            int xPrim = vector.x * (90 / vector.z);
+            int yPrim = vector.y * (90 / vector.z);
+            Vector2 vector2 = new Vector2(xPrim, yPrim);
+            return vector2;
         }
     }
 }
