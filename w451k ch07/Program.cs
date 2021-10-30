@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace w451k_ch07
 {
@@ -10,33 +7,56 @@ namespace w451k_ch07
     {
         static void Main(string[] args)
         {
-            Renderer zzzz = new Renderer();
-            bool rise = true;
-            for (int i = 30; ; )
-            {
-                zzzz.drawRectangle(new Triangle2(new Line2(25, 30, 45, 30), new Line2(45, 30, 40, i)), new Triangle2(new Line2(40, i, 30, i), new Line2(30, i, 25, 30)));
-                zzzz.renderFrame();
-                System.Threading.Thread.Sleep(10);
-                if (i == 40) rise = false;
-                if (i == 20) rise = true;
-                if (rise) i++;
-                else i--;
-            }
 
-//             for(; ; )
+            Renderer zzzz = new Renderer();
+                       
+//             bool rise = true;
+//             for (int i = 120; ; )
 //             {
-//                 String command = Console.ReadLine();
-//                 switch (command)
-//                 {
+//                 if (Console.KeyAvailable) break;
+//                 zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
+//                 System.Threading.Thread.Sleep(10);
+//                 zzzz.renderFastAsFuck();
 // 
-//                 }
+//                  if (i == 300) rise = false;
+//                  if (i == 20) rise = true;
+//                  if (rise) i++;
+//                  else i--;
+// 
 //             }
-            int[] pen = usePen();
+
+            for(; ; )
+            {
+                String command = Console.ReadLine();
+                switch (command)
+                {
+                    case "point":
+                        {
+                            int[] pen = usePen();
+                            Console.Clear();
+                            Console.SetCursorPosition(0, 0);
+                            for (int i = 0; i < pen.Length; i++)
+                            {
+                                Console.Write(pen[i] + " ");
+                            }
+                            Console.WriteLine();
+                        }
+                        break;
+                    default:
+                        {
+                            Console.Clear();
+                            Console.WriteLine("no such command");
+                        }
+                        break;
+                }
+            }
+            
 
 
 
 
         }
+
 
         static int[] usePen()
         {
