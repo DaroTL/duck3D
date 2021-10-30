@@ -7,7 +7,6 @@ namespace w451k_ch07
     {
         static void Main(string[] args)
         {
-
             Renderer zzzz = new Renderer();
             bool rise = true;
             Vector3 v1 = new Vector3(20, 20, 20);
@@ -57,7 +56,10 @@ namespace w451k_ch07
             }
             */
 
-//             for(; ; )
+
+                       
+//             bool rise = true;
+//             for (int i = 120; ; )
 //             {
 //                 if (Console.KeyAvailable) break;
 //                 zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
