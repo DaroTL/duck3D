@@ -66,7 +66,7 @@ namespace w451k_ch07
             }
         }
 
-        public void renderFrame()
+        public void renderFastAsFuck()
         {
             
 
@@ -88,7 +88,15 @@ namespace w451k_ch07
                 }
             }
             FastConsole.Flush();
+            Console.SetCursorPosition(0, 0);
         }
+
+
+//         public void renderSetCursorPosition()
+//         {
+// 
+// 
+//         }
 
         public void plotLineLow(Line2 line)
         {
@@ -157,7 +165,6 @@ namespace w451k_ch07
                 for (int x = x1; x <= x2; x++)
                 {
                     loadOnScreen(new int[,] { { x, y } });
-                    
                 }
             }
             else
@@ -165,10 +172,6 @@ namespace w451k_ch07
                 for (int x = x2; x <= x1; x++)
                 {
                     loadOnScreen(new int[,] { { x, y } });
-                    
-
-
-                   
                 }
             }
    
@@ -301,6 +304,15 @@ namespace w451k_ch07
 
         public void drawRectangle(Triangle2 t1, Triangle2 t2)
         {
+
+            for (int i = 0; i < bufforDelScreen.GetLength(0); i++)
+            {
+                for (int j = 0; j < bufforDelScreen.GetLength(1); j++)
+                {
+                    bufforDelScreen[i, j] = screen[i, j];
+
+                }
+            }
             plotLine(t1.l1);
             plotLine(t1.l2);
             plotLine(t1.l3);
