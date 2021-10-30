@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Cube2.cs" />
     <Compile Include="Cube3.cs" />
+    <Compile Include="FastConsole.cs" />
     <Compile Include="Line2.cs" />
     <Compile Include="Line3.cs" />
     <Compile Include="Pane2.cs" />
