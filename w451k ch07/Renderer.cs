@@ -88,6 +88,7 @@ namespace w451k_ch07
                 }
             }
             FastConsole.Flush();
+            Console.SetCursorPosition(0, 0);
         }
 
 
