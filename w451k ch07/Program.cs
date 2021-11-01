@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Timers;
 
 namespace w451k_ch07
 {
@@ -9,6 +9,18 @@ namespace w451k_ch07
         {
             Renderer zzzz = new Renderer();
             bool rise = true;
+            Matrix m1 = new Matrix(new int[,] { { 1, 1, 1 }, { 0, 1, 1 }, { 0, 1, 1 } });
+            Matrix m2 = new Matrix(new int[,] { { 2, 5 }, { 6, 7 }, { 1, 8 } });
+            Matrix m3 = m1.multiply(m2);
+            for (int i = 0; i < m3.tablica.GetLength(0); i++)
+            {
+                for(int j = 0; j < m3.tablica.GetLength(1); j++)
+                {
+                    Console.Write(m3.tablica[i, j]);
+                }
+                Console.WriteLine();
+            }
+            /*
             Vector3 v1 = new Vector3(20, 20, 20);
             Vector3 v2 = new Vector3(20, 60, 20);
             Vector3 v3 = new Vector3(60, 60, 20);
@@ -42,7 +54,7 @@ namespace w451k_ch07
             zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d4));
             zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d5));
             zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d6));
-            zzzz.render();
+            zzzz.renderFastAsFuck();
             /*
             for (int i = 30; ; )
             {
@@ -57,23 +69,23 @@ namespace w451k_ch07
             */
 
 
-                       
-//             bool rise = true;
-//             for (int i = 120; ; )
-//             {
-//                 if (Console.KeyAvailable) break;
-//                 zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
-//                 System.Threading.Thread.Sleep(10);
-//                 zzzz.renderFastAsFuck();
-// 
-//                  if (i == 300) rise = false;
-//                  if (i == 20) rise = true;
-//                  if (rise) i++;
-//                  else i--;
-// 
-//             }
 
-            for(; ; )
+            //             bool rise = true;
+            //             for (int i = 120; ; )
+            //             {
+            //                 if (Console.KeyAvailable) break;
+            //                 zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
+            //                 System.Threading.Thread.Sleep(10);
+            //                 zzzz.renderFastAsFuck();
+            // 
+            //                  if (i == 300) rise = false;
+            //                  if (i == 20) rise = true;
+            //                  if (rise) i++;
+            //                  else i--;
+            // 
+            //             }
+
+            for (; ; )
             {
                 String command = Console.ReadLine();
                 switch (command)
@@ -98,13 +110,8 @@ namespace w451k_ch07
                         break;
                 }
             }
-            
-
-
-
 
         }
-
 
         static int[] usePen()
         {

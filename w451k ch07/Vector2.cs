@@ -19,8 +19,9 @@ namespace w451k_ch07
 
         public static Vector2 convertVector3(Vector3 vector)
         {
-            int xPrim = vector.x * (90 / vector.z);
-            int yPrim = vector.y * (90 / vector.z);
+            int pov = 90;
+            int xPrim = vector.x * (pov / vector.z);
+            int yPrim = vector.y * (pov / vector.z) + 500;
             Vector2 vector2 = new Vector2(xPrim, yPrim);
             return vector2;
         }

@@ -49,6 +49,7 @@
     <Compile Include="FastConsole.cs" />
     <Compile Include="Line2.cs" />
     <Compile Include="Line3.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="Pane2.cs" />
     <Compile Include="Pane3.cs" />
     <Compile Include="Program.cs" />
