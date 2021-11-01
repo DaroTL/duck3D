@@ -12,14 +12,16 @@ namespace w451k_ch07
             Matrix m1 = new Matrix(new int[,] { { 1, 1, 1 }, { 0, 1, 1 }, { 0, 1, 1 } });
             Matrix m2 = new Matrix(new int[,] { { 2, 5 }, { 6, 7 }, { 1, 8 } });
             Matrix m3 = m1.multiply(m2);
+
             for (int i = 0; i < m3.tablica.GetLength(0); i++)
             {
                 for(int j = 0; j < m3.tablica.GetLength(1); j++)
                 {
-                    Console.Write(m3.tablica[i, j]);
+                    Console.Write(" " +m3.tablica[i, j]);
                 }
                 Console.WriteLine();
             }
+
             /*
             Vector3 v1 = new Vector3(20, 20, 20);
             Vector3 v2 = new Vector3(20, 60, 20);
