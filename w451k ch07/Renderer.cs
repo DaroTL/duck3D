@@ -12,13 +12,20 @@ namespace w451k_ch07
                     fill = '+',
                     contour = '#';
 
-        public char[,] screen = new char[500,1000];
-        public char[,] bufforDelScreen = new char[500, 1000];
-        public char[,] bufforAddScreen = new char[500, 1000];
+        public char[,] screen = new char[71, 235];
 
 
-        public Renderer()
+        int offsetX;
+        int offsetY;
+
+        public Renderer(char n_background, char n_fill, char n_contour, int screenWidth, int screenHeight)
         {
+            screen = new char[screenWidth, screenHeight];
+            background = n_background;
+            fill = n_fill;
+            contour = n_contour;
+            offsetX = screen.GetLength(1) / 2;
+            offsetY = screen.GetLength(0) / 2;
             for (int i = 0; i < screen.GetLength(0); i++)
             {
                 for (int z = 0; z < screen.GetLength(1); z++)
@@ -26,13 +33,28 @@ namespace w451k_ch07
                     screen[i, z] = background;
                 }
             }
+
+        }
+        public Renderer()
+        {
+            offsetX = screen.GetLength(1) / 2;
+            offsetY = screen.GetLength(0) / 2;
+            for (int i = 0; i < screen.GetLength(0); i++)
+            {
+                for (int z = 0; z < screen.GetLength(1); z++)
+                {
+                    screen[i, z] = background;
+                }
+            }
+
         }
 
         public void loadOnScreen(int[,] thing)
         {
             for (int i = 0; i < thing.GetLength(0); i++)
             {
-                screen[thing[i, 0], thing[i, 1]] = '#';
+                addToScreen(thing[i, 0], thing[i, 1], fill);
+                
             }
         }
 
@@ -68,14 +90,14 @@ namespace w451k_ch07
 
         public void renderFastAsFuck()
         {
-            
+
 
             for (int i = 0; i < screen.GetLength(0); i++)
             {
 
                 for (int z = 0; z < screen.GetLength(1); z++)
                 {
-                    
+
                     FastConsole.Write("" + screen[i, z]);
                 }
                 FastConsole.WriteLine("");
@@ -90,13 +112,6 @@ namespace w451k_ch07
             FastConsole.Flush();
             Console.SetCursorPosition(0, 0);
         }
-
-
-//         public void renderSetCursorPosition()
-//         {
-// 
-// 
-//         }
 
         public void plotLineLow(Line2 line)
         {
@@ -113,7 +128,7 @@ namespace w451k_ch07
             y = line.v1.y;
             for (int x = line.v1.x; x < line.v2.x; x++)
             {
-                loadOnScreen(new int[,] { { x,y} });
+                addToScreen(y, x, fill);
                 if (D > 0)
                 {
                     y = y + yi;
@@ -143,7 +158,7 @@ namespace w451k_ch07
             x = line.v1.x;
             for (int y = line.v1.y; y < line.v2.y; y++)
             {
-                loadOnScreen(new int[,] { { x,y } });
+                addToScreen(y, x, fill);
                 if (D > 0)
                 {
                     x = x + xi;
@@ -164,14 +179,16 @@ namespace w451k_ch07
             {
                 for (int x = x1; x <= x2; x++)
                 {
-                    loadOnScreen(new int[,] { { x, y } });
+                    addToScreen(y,x,fill);
+                    
                 }
             }
             else
             {
                 for (int x = x2; x <= x1; x++)
                 {
-                    loadOnScreen(new int[,] { { x, y } });
+                    addToScreen(y, x, fill);
+                    
                 }
             }
    
@@ -185,7 +202,8 @@ namespace w451k_ch07
                 
                 for (int y = y1; y <= y2; y++)
                 {
-                    loadOnScreen(new int[,] { { x, y } });
+                    addToScreen(y, x, fill);
+                    
                     
                 }
             }
@@ -194,8 +212,8 @@ namespace w451k_ch07
                 
                 for (int y = y2; y <= y1; y++)
                 {
+                    addToScreen(y, x, fill);
                     
-                    loadOnScreen(new int[,] { { x, y } });
                 }
             }
         }
@@ -241,12 +259,12 @@ namespace w451k_ch07
 
 
         }
-
+        #region fille
         public void FillSimple(Vector2 v)
         {
             if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
             {
-                screen[v.x, v.y] = fill;
+                addToScreen(v.x, v.y, fill);
                 FillSimple(new Vector2(v.x + 1, v.y));
                 FillSimple(new Vector2(v.x, v.y + 1));
                 FillSimple(new Vector2(v.x - 1, v.y));
@@ -289,30 +307,18 @@ namespace w451k_ch07
 
             }
         }
-
+        #endregion fille
         public void drawRectangleRaw(Pane2 p)
         {
             plotLine(p.l1);
             plotLine(p.l2);
             plotLine(p.l3);
             plotLine(p.l4);
-            int[] x = { p.l1.v1.x, p.l2.v1.x, p.l3.v1.x, p.l4.v1.x };
-            int[] y = { p.l1.v1.y, p.l2.v1.y, p.l3.v1.y, p.l4.v1.y };
-            //FillSimple(new Vector2(x.Min() + (x.Max() / 2), y.Min() + (y.Max() / 2)));
-
         }
 
         public void drawRectangle(Triangle2 t1, Triangle2 t2)
         {
 
-            for (int i = 0; i < bufforDelScreen.GetLength(0); i++)
-            {
-                for (int j = 0; j < bufforDelScreen.GetLength(1); j++)
-                {
-                    bufforDelScreen[i, j] = screen[i, j];
-
-                }
-            }
             plotLine(t1.l1);
             plotLine(t1.l2);
             plotLine(t1.l3);
@@ -354,6 +360,21 @@ namespace w451k_ch07
         public int[] getPointInShape(int minX, int minY)
         {
             return new int[] {0,0};
+        }
+    
+        public void addToScreen(int x, int y, char addVar)
+        {
+
+            if (offsetY + y < screen.GetLength(0) && offsetX + x < screen.GetLength(1))
+            {
+                screen[offsetY + y, offsetX + x] = addVar;
+            }
+            else Console.WriteLine(x + " " + y);
+
+        }
+        public char getScreenField(int x, int y)
+        {
+            return screen[y + offsetY, x + offsetX];
         }
     }
 
