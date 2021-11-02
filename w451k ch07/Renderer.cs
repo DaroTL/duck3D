@@ -11,8 +11,8 @@ namespace w451k_ch07
         public char background = ' ',
                     fill = '+',
                     contour = '#';
-
-        public char[,] screen = new char[71, 235];
+        // 71 235
+        public char[,] screen = new char[400, 300];
 
 
         int offsetX;
@@ -49,14 +49,7 @@ namespace w451k_ch07
 
         }
 
-        public void loadOnScreen(int[,] thing)
-        {
-            for (int i = 0; i < thing.GetLength(0); i++)
-            {
-                addToScreen(thing[i, 0], thing[i, 1], fill);
-                
-            }
-        }
+
 
         public void render(int[,] thing)
         {
@@ -111,6 +104,8 @@ namespace w451k_ch07
             }
             FastConsole.Flush();
             Console.SetCursorPosition(0, 0);
+
+
         }
 
         public void plotLineLow(Line2 line)
@@ -365,11 +360,11 @@ namespace w451k_ch07
         public void addToScreen(int x, int y, char addVar)
         {
 
-            if (offsetY + y < screen.GetLength(0) && offsetX + x < screen.GetLength(1))
-            {
+/*            if (offsetY + y < screen.GetLength(0) && offsetX + x < screen.GetLength(1))
+            {*/
                 screen[offsetY + y, offsetX + x] = addVar;
-            }
-            else Console.WriteLine(x + " " + y);
+            
+
 
         }
         public char getScreenField(int x, int y)
