@@ -12,7 +12,7 @@ namespace w451k_ch07
                     fill = '+',
                     contour = '#';
 
-        public char[,] screen = new char[71, 235];
+        public char[,] screen = new char[150, 200];
 
 
         int offsetX;

@@ -9,28 +9,14 @@ namespace w451k_ch07
         {
             Renderer zzzz = new Renderer();
             bool rise = true;
-            Matrix m1 = new Matrix(new int[,] { { 1, 1, 1 }, { 0, 1, 1 }, { 0, 1, 1 } });
-            Matrix m2 = new Matrix(new int[,] { { 2, 5 }, { 6, 7 }, { 1, 8 } });
-            Matrix m3 = m1.multiply(m2);
-
-            for (int i = 0; i < m3.tablica.GetLength(0); i++)
-            {
-                for(int j = 0; j < m3.tablica.GetLength(1); j++)
-                {
-                    Console.Write(" " +m3.tablica[i, j]);
-                }
-                Console.WriteLine();
-            }
-
-            /*
-            Vector3 v1 = new Vector3(20, 20, 20);
-            Vector3 v2 = new Vector3(20, 60, 20);
-            Vector3 v3 = new Vector3(60, 60, 20);
-            Vector3 v4 = new Vector3(60, 20, 20);
-            Vector3 v5 = new Vector3(60, 20, 60);
-            Vector3 v6 = new Vector3(20, 20, 60);
-            Vector3 v7 = new Vector3(20, 60, 60);
-            Vector3 v8 = new Vector3(60, 60, 60);
+            Vector3 v1 = new Vector3(20, 20, 0);
+            Vector3 v2 = new Vector3(20, 60, 0);
+            Vector3 v3 = new Vector3(60, 60, 0);
+            Vector3 v4 = new Vector3(60, 20, 0);
+            Vector3 v5 = new Vector3(60, 20, 0);
+            Vector3 v6 = new Vector3(20, 20, 0);
+            Vector3 v7 = new Vector3(20, 60, 0);
+            Vector3 v8 = new Vector3(60, 60, 0);
             Line3 l1 = new Line3(v1, v2);
             Line3 l2 = new Line3(v2, v3);
             Line3 l3 = new Line3(v3, v4);
@@ -50,13 +36,25 @@ namespace w451k_ch07
             Pane3 pane3d4 = new Pane3(l9, l2, l11, l10);
             Pane3 pane3d5 = new Pane3(l5, l11, l3, l12);
             Pane3 pane3d6 = new Pane3(l6, l12, l10, l8);
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d1));
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d2));
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d3));
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d4));
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d5));
-            zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d6));
-            zzzz.renderFastAsFuck();
+            for (; ; )
+            {
+                v1.rotate();
+                v2.rotate();
+                v3.rotate();
+                v4.rotate();
+                v5.rotate();
+                v6.rotate();
+                v7.rotate();
+                v8.rotate();
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d1));
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d2));
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d3));
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d4));
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d5));
+                zzzz.drawRectangleRaw(Pane2.convertPane3(pane3d6));
+                zzzz.renderFastAsFuck();
+                System.Threading.Thread.Sleep(500);
+            }
             /*
             for (int i = 30; ; )
             {
