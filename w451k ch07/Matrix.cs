@@ -21,16 +21,28 @@ namespace w451k_ch07
             Matrix product = new Matrix(new double[m.tablica.GetLength(0), m.tablica.GetLength(1)]);
             for (int i = 0; i < this.tablica.GetLength(0); i++)
             {
-                    for (int k = 0; k < m.tablica.GetLength(1); k++)
+                for (int k = 0; k < m.tablica.GetLength(1); k++)
+                {
+                    for (int j = 0; j < this.tablica.GetLength(1); j++)
                     {
-                        for (int j = 0; j < this.tablica.GetLength(1); j++)
-                        {
 
-                        product.tablica[i, k] += (m.tablica[j, k] * this.tablica[i,j]); 
-                        }
+                        product.tablica[i, k] += (m.tablica[j, k] * this.tablica[i, j]);
                     }
+                }
             }
-            
+
+            return product;
+        }
+        public Matrix subtract(Matrix m)
+        {
+            Matrix product = new Matrix(new double[m.tablica.GetLength(0), m.tablica.GetLength(1)]);
+            for (int i = 0; i < this.tablica.GetLength(0); ++i)
+            {
+                for (int j = 0; j < this.tablica.GetLength(1); ++j)
+                {
+                    product.tablica[i, j] = this.tablica[i, j] - m.tablica[i, j];
+                }
+            }
             return product;
         }
     }
