@@ -44,21 +44,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="console.cs" />
-    <Compile Include="Cube2.cs" />
-    <Compile Include="Cube3.cs" />
+    <Compile Include="two dimension menagment\Cube2.cs" />
+    <Compile Include="three dimension menagment\Cube3.cs" />
     <Compile Include="FastConsole.cs" />
-    <Compile Include="Line2.cs" />
-    <Compile Include="Line3.cs" />
+    <Compile Include="two dimension menagment\Line2.cs" />
+    <Compile Include="three dimension menagment\Line3.cs" />
     <Compile Include="Matrix.cs" />
-    <Compile Include="Pane2.cs" />
-    <Compile Include="Pane3.cs" />
+    <Compile Include="Object.cs" />
+    <Compile Include="two dimension menagment\Pane2.cs" />
+    <Compile Include="three dimension menagment\Pane3.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Triangle2.cs" />
-    <Compile Include="Triangle3.cs" />
-    <Compile Include="Vector2.cs" />
-    <Compile Include="Vector3.cs" />
+    <Compile Include="two dimension menagment\Triangle2.cs" />
+    <Compile Include="three dimension menagment\Triangle3.cs" />
+    <Compile Include="two dimension menagment\Vector2.cs" />
+    <Compile Include="three dimension menagment\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

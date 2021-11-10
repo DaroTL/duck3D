@@ -12,12 +12,12 @@ namespace w451k_ch07
                     fill = '+',
                     contour = '#';
         // 71 235
-        public char[,] screen = new char[400, 300];
+        public char[,] screen = new char[71, 235];
 
-        public char[,] screen = new char[150, 200];
 
         int offsetX;
         int offsetY;
+        int horizontalOffset = 2;
 
         public Renderer(char n_background, char n_fill, char n_contour, int screenWidth, int screenHeight)
         {
@@ -85,7 +85,26 @@ namespace w451k_ch07
         public void renderFastAsFuck()
         {
 
+            Console.SetCursorPosition(0, 0);
+            for (int i = 0; i < screen.GetLength(0); i++)
+            {
 
+                for (int z = 0; z < screen.GetLength(1); z++)
+                {
+
+                    FastConsole.Write("" + screen[i, z]);
+                }
+                FastConsole.WriteLine("");
+            }
+            FastConsole.Flush();
+
+
+
+        }
+        public void renderFastAsFuckFrame()
+        {
+
+            Console.SetCursorPosition(0, 0);
             for (int i = 0; i < screen.GetLength(0); i++)
             {
 
@@ -104,8 +123,20 @@ namespace w451k_ch07
                 }
             }
             FastConsole.Flush();
-            Console.SetCursorPosition(0, 0);
 
+
+
+        }
+
+        public void ClearScreen()
+        {
+            for (int u = 0; u < screen.GetLength(0); u++)
+            {
+                for (int z = 0; z < screen.GetLength(1); z++)
+                {
+                    screen[u, z] = background;
+                }
+            }
 
         }
 
@@ -216,21 +247,22 @@ namespace w451k_ch07
 
         public void plotLine(Line2 line)
         {
-            if(Math.Abs(line.v2.y - line.v1.y) < Math.Abs(line.v2.x - line.v1.x))
+            int y1 = line.v1.y* horizontalOffset, y2 = line.v2.y * horizontalOffset;
+            if(Math.Abs(y2 - y1) < Math.Abs(line.v2.x - line.v1.x))
             {
                 if(line.v2.y == line.v1.y)
                 {
-                      plotHorizontalLine(line.v1.x, line.v2.x, line.v1.y);
+                      plotHorizontalLine(line.v1.x, line.v2.x, y1);
 
                     return;
                 }
                 if(line.v1.x > line.v2.x)
                 {
-                    plotLineLow(new Line2(line.v2, line.v1));
+                    plotLineLow(new Line2(line.v2.x, y2, line.v1.x, y1)); ;
                 }
                 else
                 {
-                    plotLineLow(new Line2(line.v1, line.v2));
+                    plotLineLow(new Line2(line.v1.x, y1, line.v2.x, y2));
                 }
 
             }
@@ -239,17 +271,17 @@ namespace w451k_ch07
                 if (line.v2.x == line.v1.x)
                 {
 
-                        plotVerticalLine(line.v1.y, line.v2.y, line.v1.x);
+                        plotVerticalLine(y1, y2, line.v1.x);
 
                     return;
                 }
                 if (line.v1.y > line.v2.y)
                 {
-                    plotLineHigh(new Line2(line.v2, line.v1));
+                    plotLineHigh(new Line2(line.v2.x, y2, line.v1.x, y1));
                 }
                 else
                 {
-                    plotLineHigh(new Line2(line.v1, line.v2));
+                    plotLineHigh(new Line2(line.v1.x, y1, line.v2.x, y2));
                 }
             }
 
@@ -306,10 +338,10 @@ namespace w451k_ch07
         #endregion fille
         public void drawRectangleRaw(Pane2 p)
         {
-            plotLine(p.l1);
-            plotLine(p.l2);
-            plotLine(p.l3);
-            plotLine(p.l4);
+            plotLine(p.lines[0]);
+            plotLine(p.lines[1]);
+            plotLine(p.lines[2]);
+            plotLine(p.lines[3]);
         }
 
         public void drawRectangle(Triangle2 t1, Triangle2 t2)
@@ -361,16 +393,49 @@ namespace w451k_ch07
         public void addToScreen(int x, int y, char addVar)
         {
 
-/*            if (offsetY + y < screen.GetLength(0) && offsetX + x < screen.GetLength(1))
-            {*/
+            if((offsetY + y < screen.GetLength(0) && offsetY + y > 0) && (offsetX + x < screen.GetLength(1) && offsetX + x > 0))
+            {
                 screen[offsetY + y, offsetX + x] = addVar;
-            
+            }
+
+
+
+
 
 
         }
         public char getScreenField(int x, int y)
         {
             return screen[y + offsetY, x + offsetX];
+        }
+
+
+
+
+       public void DDAplotLine(Line2 line)
+        {
+            int x1 = line.v1.x, x2 = line.v2.x, y1 = line.v1.y * horizontalOffset, y2 = line.v2.y * horizontalOffset;
+            int x = 0, y = 0;
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+            int step = 0;
+            if (Math.Abs(dx) >= Math.Abs(dy))
+            {
+                step = Math.Abs(dx);
+            }
+            else step = Math.Abs(dy);
+
+            dx = dx / step;
+            dy = dy / step;
+
+            x = x1;
+            y = y1;
+            for(int i = 1; i <= step; i++)
+            {
+                addToScreen(x, y, fill);
+                x += dx;
+                y += dy;   
+            }
         }
     }
 
