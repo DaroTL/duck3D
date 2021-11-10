@@ -7,6 +7,7 @@ namespace w451k_ch07
     {
         static void Main(string[] args)
         {
+
             Renderer zzzz = new Renderer();
             bool rise = true;
             Vector3 v1 = new Vector3(20, 20, 0);
@@ -65,27 +66,10 @@ namespace w451k_ch07
                 if (i == 20) rise = true;
                 if (rise) i++;
                 else i--;
+                System.Threading.Thread.Sleep(5);
             }
-            */
 
-
-
-            //             bool rise = true;
-            //             for (int i = 120; ; )
-            //             {
-            //                 if (Console.KeyAvailable) break;
-            //                 zzzz.drawRectangle(new Triangle2(new Line2(20, 120, 100, 120), new Line2(100, 120, 80, i)), new Triangle2(new Line2(80, i, 40, i), new Line2(40, i, 20, 120)));
-            //                 System.Threading.Thread.Sleep(10);
-            //                 zzzz.renderFastAsFuck();
-            // 
-            //                  if (i == 300) rise = false;
-            //                  if (i == 20) rise = true;
-            //                  if (rise) i++;
-            //                  else i--;
-            // 
-            //             }
-
-            for (; ; )
+/*            for (; ; )
             {
                 String command = Console.ReadLine();
                 switch (command)
@@ -109,7 +93,7 @@ namespace w451k_ch07
                         }
                         break;
                 }
-            }
+            }*/
 
         }
 

@@ -14,6 +14,7 @@ namespace w451k_ch07
         // 71 235
         public char[,] screen = new char[400, 300];
 
+        public char[,] screen = new char[150, 200];
 
         int offsetX;
         int offsetY;
