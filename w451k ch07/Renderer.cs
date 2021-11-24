@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 
 
@@ -12,7 +13,7 @@ namespace w451k_ch07
                     fill = '+',
                     contour = '#';
         // 71 235
-        public char[,] screen = new char[71, 235];
+        public char[,] screen = new char[200, 500];
 
 
         int offsetX;
@@ -142,7 +143,7 @@ namespace w451k_ch07
 
         public void plotLineLow(Line2 line)
         {
-            int dx = line.v2.x - line.v1.x,
+            float dx = line.v2.x - line.v1.x,
                 dy = line.v2.y - line.v1.y,
                 yi = 1,
                 D, y;
@@ -153,7 +154,7 @@ namespace w451k_ch07
             }
             D = (2 * dy) - dx;
             y = line.v1.y;
-            for (int x = line.v1.x; x < line.v2.x; x++)
+            for (int x = (int)line.v1.x; x < line.v2.x; x++)
             {
                 addToScreen(y, x, fill);
                 if (D > 0)
@@ -172,7 +173,7 @@ namespace w451k_ch07
 
         public void plotLineHigh(Line2 line)
         {
-            int dx = line.v2.x - line.v1.x,
+            float dx = line.v2.x - line.v1.x,
                 dy = line.v2.y - line.v1.y,
                 xi = 1,
                 D, x;
@@ -183,7 +184,7 @@ namespace w451k_ch07
             }
             D = (2 * dx) - dy;
             x = line.v1.x;
-            for (int y = line.v1.y; y < line.v2.y; y++)
+            for (int y = (int)line.v1.y; y < line.v2.y; y++)
             {
                 addToScreen(y, x, fill);
                 if (D > 0)
@@ -200,11 +201,11 @@ namespace w451k_ch07
 
         }
 
-        public void plotHorizontalLine(int x1, int x2, int y)
+        public void plotHorizontalLine(float x1, float x2, float y)
         {
             if(x1 < x2)
             {
-                for (int x = x1; x <= x2; x++)
+                for (int x = (int)x1; x <= x2; x++)
                 {
                     addToScreen(y,x,fill);
                     
@@ -212,7 +213,7 @@ namespace w451k_ch07
             }
             else
             {
-                for (int x = x2; x <= x1; x++)
+                for (int x = (int)x2; x <= x1; x++)
                 {
                     addToScreen(y, x, fill);
                     
@@ -221,13 +222,13 @@ namespace w451k_ch07
    
         }
 
-        public void plotVerticalLine( int y1, int y2, int x)
+        public void plotVerticalLine( float y1, float y2, float x)
         {
             
             if (y1 < y2)
             {
                 
-                for (int y = y1; y <= y2; y++)
+                for (int y = (int)y1; y <= y2; y++)
                 {
                     addToScreen(y, x, fill);
                     
@@ -237,7 +238,7 @@ namespace w451k_ch07
             else
             {
                 
-                for (int y = y2; y <= y1; y++)
+                for (int y = (int)y2; y <= y1; y++)
                 {
                     addToScreen(y, x, fill);
                     
@@ -247,7 +248,7 @@ namespace w451k_ch07
 
         public void plotLine(Line2 line)
         {
-            int y1 = line.v1.y* horizontalOffset, y2 = line.v2.y * horizontalOffset;
+            float y1 = line.v1.y* horizontalOffset, y2 = line.v2.y * horizontalOffset;
             if(Math.Abs(y2 - y1) < Math.Abs(line.v2.x - line.v1.x))
             {
                 if(line.v2.y == line.v1.y)
@@ -288,7 +289,109 @@ namespace w451k_ch07
 
         }
         #region fille
-        public void FillSimple(Vector2 v)
+
+        public void FillTriangle(Vector2 p0, Vector2 p1, Vector2 p2, char col)
+        {
+
+            Vector2 v0 = new Vector2(p0.x * horizontalOffset, p0.y);
+            Vector2 v1 = new Vector2(p1.x * horizontalOffset, p1.y);
+            Vector2 v2 = new Vector2(p2.x * horizontalOffset, p2.y);
+
+            if (v1.y < v0.y) swap(ref v0, ref v1);
+            if(v2.y < v1.y) swap(ref v1, ref v2);
+            if(v1.y < v0.y) swap(ref v0, ref v1);
+
+
+
+            if (v0.y == v1.y)
+            {
+
+                if (v1.x < v0.x) swap(ref v0, ref v1);
+                DrawFlatTopTriangle(v0, v1, v2, col);
+            }
+            else if(v1.y == v2.y)
+            {
+
+
+                if (v2.x < v1.x) swap(ref v1, ref v2);
+                DrawFlatBottomTriangle(v0, v1, v2, col);
+            }
+            else
+            {
+
+                float alphaSplit = (v1.y - v0.y) / (v2.y - v0.y);
+
+                Vector2 vi = new Vector2(
+                    (v0.x + (v2.x - v0.x) * alphaSplit),
+                    (v0.y + (v2.y - v0.y) * alphaSplit)
+                    );
+
+                if(v1.x < vi.x)
+                {
+                    DrawFlatBottomTriangle(v0, v1, vi, col);
+                    DrawFlatTopTriangle(v1, vi, v2, col);
+                }
+                else
+                {
+                    DrawFlatBottomTriangle(v0, vi, v1, col);
+                    DrawFlatTopTriangle(vi, v1, v2, col);
+                }
+            }
+        }
+
+        private void DrawFlatTopTriangle(Vector2 v0, Vector2 v1, Vector2 v2, char col)
+        {
+
+
+            float m0 = (v2.x - v0.x) / (v2.y - v0.y);
+            float m1 = (v2.x - v1.x) / (v2.y - v1.y);
+
+            int yStart = (int)Math.Ceiling(v0.y - 0.5f);
+            int yEnd = (int)Math.Ceiling(v2.y - 0.5f);
+
+            for (int y = yStart; y < yEnd; y++)
+            {
+                float px0 = m0 * ((float)y + 0.5f - v0.y) + v0.x;
+                float px1 = m1 * ((float)y + 0.5f - v1.y) + v1.x;
+
+                int xStart = (int)Math.Ceiling(px0 - 0.5f);
+                int xEnd = (int)Math.Ceiling(px1 - 0.5f);
+
+                for( int x = xStart; x < xEnd; x++)
+                {
+
+
+                    addToScreen(x, y, col);
+                }
+            }
+
+        }
+
+        private void DrawFlatBottomTriangle(Vector2 v0, Vector2 v1, Vector2 v2, char col)
+        {
+            float m0 = (v1.x - v0.x) / (v1.y - v0.y);
+            float m1 = (v2.x - v0.x) / (v2.y - v0.y);
+
+            int yStart = (int)Math.Ceiling(v0.y - 0.5f);
+            int yEnd = (int)Math.Ceiling(v2.y - 0.5f);
+
+            for (int y = yStart; y < yEnd; y++)
+            {
+                float px0 = m0 * ((float)y + 0.5f - v0.y) + v0.x;
+                float px1 = m1 * ((float)y + 0.5f - v0.y) + v0.x;
+
+                int xStart = (int)Math.Ceiling(px0 - 0.5f);
+                int xEnd = (int)Math.Ceiling(px1 - 0.5f);
+
+                for (int x = xStart; x < xEnd; x++)
+                {
+
+                    addToScreen(x, y, col);
+                }
+            }
+        }
+
+/*        public void FillSimple(Vector2 v)
         {
             if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
             {
@@ -334,7 +437,7 @@ namespace w451k_ch07
                 Fill8(new Vector2(v.x + 1, v.y + 1));
 
             }
-        }
+        }*/
         #endregion fille
         public void drawRectangleRaw(Pane2 p)
         {
@@ -362,7 +465,8 @@ namespace w451k_ch07
             plotLine(t.l3);
         }
 
-        public void drawXgon(Vector2[] points)
+
+/*        public void drawXgon(Vector2[] points)
         {
             if(points.GetLength(0) > 2)
             {
@@ -383,19 +487,19 @@ namespace w451k_ch07
                 }
                  
             }
-        }
+        }*/
 
         public int[] getPointInShape(int minX, int minY)
         {
             return new int[] {0,0};
         }
     
-        public void addToScreen(int x, int y, char addVar)
+        public void addToScreen(float x, float y, char addVar)
         {
 
-            if((offsetY + y < screen.GetLength(0) && offsetY + y > 0) && (offsetX + x < screen.GetLength(1) && offsetX + x > 0))
+            if((offsetY + y < screen.GetLength(0) && offsetY + y > 0) && (offsetX - x < screen.GetLength(1) && offsetX - x > 0))
             {
-                screen[offsetY + y, offsetX + x] = addVar;
+                screen[offsetY + (int)Math.Ceiling(y), (offsetX - (int)Math.Ceiling(x))] = addVar;
             }
 
 
@@ -410,32 +514,29 @@ namespace w451k_ch07
         }
 
 
-
-
-       public void DDAplotLine(Line2 line)
+        void swap(ref Vector2 v1, ref Vector2 v2)
         {
-            int x1 = line.v1.x, x2 = line.v2.x, y1 = line.v1.y * horizontalOffset, y2 = line.v2.y * horizontalOffset;
-            int x = 0, y = 0;
-            int dx = x2 - x1;
-            int dy = y2 - y1;
-            int step = 0;
-            if (Math.Abs(dx) >= Math.Abs(dy))
-            {
-                step = Math.Abs(dx);
-            }
-            else step = Math.Abs(dy);
+            Vector2 v3 = v1;
 
-            dx = dx / step;
-            dy = dy / step;
+             v1 = v2;
+             v2 = v3;
+        }
 
-            x = x1;
-            y = y1;
-            for(int i = 1; i <= step; i++)
-            {
-                addToScreen(x, y, fill);
-                x += dx;
-                y += dy;   
-            }
+
+        List<int> Interpolate(int i0, int d0, int i1, int d1) {
+          if (i0 == i1) {
+            return new List<int>() { d0};
+          }
+
+            List<int> values = new List<int>();
+            float a = (d1 - d0) / (i1 - i0);
+            float d = d0;
+          for (int i = i0; i <= i1; i++) {
+            values.Add((int)d);
+            d += a;
+          }
+
+        return values;
         }
     }
 

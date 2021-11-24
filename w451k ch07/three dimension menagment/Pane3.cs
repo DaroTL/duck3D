@@ -26,9 +26,14 @@ namespace w451k_ch07
             lines.Add(new Line3(p4, p1));
         }
 
-        public Pane2 convertPane3()
+        public Pane2 convertPane3(Vector3 cameraPosition, Vector3 cameraRotation, double cameraScreenDistance = 20)
         {
-            return new Pane2(p1.convertVectorTo2D(), p2.convertVectorTo2D(), p3.convertVectorTo2D(), p4.convertVectorTo2D()); 
+            return new Pane2(p1.projectSimple(
+                cameraPosition, cameraRotation, cameraScreenDistance),
+                p2.projectSimple(cameraPosition, cameraRotation, cameraScreenDistance),
+                p3.projectSimple(cameraPosition, cameraRotation, cameraScreenDistance),
+                p4.projectSimple(cameraPosition, cameraRotation, cameraScreenDistance)
+                ); 
         }
     }
 }

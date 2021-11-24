@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace w451k_ch07
 {
-    public class Vector2
+    public class Light
     {
-        public float x;
-        public float y;
+        Point3D location;
+        public Vector3 lightDir;
 
-        public Vector2(float x, float y)
+        public Light(Point3D location)
         {
-            this.x = x;
-            this.y = y;
+            this.location = location;
         }
-
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace w451k_ch07
 {
-    class Object
+    public class Object
     {
         public String name = "";
         public Vector3 location = new Vector3(0, 0, 0);
@@ -14,7 +14,8 @@ namespace w451k_ch07
         Vector3 rotation = new Vector3(0, 0, 0);
         public List<Point3D> verticies = new List<Point3D>();
         public List<Line3> lines = new List<Line3>();
-
+        public List<Triangle3> triangles = new List<Triangle3>();
+        public float scale = 2;
 
         public Object(string _name, Vector3 _location, Vector3 _rotation)
         {
@@ -34,17 +35,18 @@ namespace w451k_ch07
             {
                 
                 List<Point3D> toConnect = new List<Point3D>();
-                List<Line3> newLines = new List<Line3>();
+
                 //znajduje po id
-                foreach (Point3D y in verticies)
+                foreach (int c in x)
                 {
-                    
-                    foreach (int c in x)
+                    foreach (Point3D y in verticies)
                     {
+                    
+
                         
                         if (y.getid() == c)
                         {
-                            
+                            Console.WriteLine(y.getid());
                             toConnect.Add(y);
                         }
                     }    
@@ -54,20 +56,32 @@ namespace w451k_ch07
                 
                 for (int z = 0; z < toConnect.Count - 1; z++)
                 {
-  
-                        newLines.Add(new Line3(toConnect[z], toConnect[z+1]));
-                        lines.Add(new Line3(toConnect[z], toConnect[z+1]));
-                    if (z != 0 && (float)(z+1) % 3 == 0 && triangle) 
+                    
+                    lines.Add(new Line3(toConnect[z], toConnect[z+1]));
+                    if(toConnect.Count == 3 && z+1 == 2)
                     {
+                        lines.Add(new Line3(toConnect[toConnect.Count()-1], toConnect[0]));
+                        triangles.Add(new Triangle3(toConnect[0], toConnect[1], toConnect[2]));
                         
-                        newLines.Add(new Line3(toConnect[z], toConnect[z - 2]));
-                        lines.Add(new Line3(toConnect[z], toConnect[z - 2]));
                     }
-                    if(z + 1 == toConnect.Count - 1)
+                    else
                     {
-                        newLines.Add(new Line3(toConnect[0], toConnect[toConnect.Count - 1]));
-                        lines.Add(new Line3(toConnect[0], toConnect[toConnect.Count - 1]));
+                        /*                        
+                        if (z != 0 && (float)(z + 1) % 3 == 0 && triangle)
+                        {
+
+                            lines.Add(new Line3(toConnect[z], toConnect[z - 2]));
+                            triangles.Add(new Triangle3(toConnect[z], toConnect[z - 1], toConnect[z - 2]));
+                        }
+                        if (z + 1 == toConnect.Count - 1)
+                        {
+
+                            *//*lines.Add(new Line3(toConnect[0], toConnect[toConnect.Count -1]));*//*
+                            triangles.Add(new Triangle3(toConnect[z + 1], toConnect[z], toConnect[0]));
+
+                        }*/
                     }
+
 
                 }
 
@@ -85,6 +99,14 @@ namespace w451k_ch07
                 z.setGlobal(x);
             }
         }
+
+
+
+
+
+
+
+
         void rotateX(double rotation)
         {
             double anglecos = Math.Cos(rotation);
@@ -203,6 +225,133 @@ namespace w451k_ch07
             rotateX(rotation.x, point);
             rotateY(rotation.y, point);
             rotateZ(rotation.z, point);
+        }
+
+        public void calculateLight()
+        {
+            Light[] lights = new Light[Scene.currentScene.LightList.Count()];
+
+            for(int i = 0; i < lights.Length; i++)
+            {
+                lights[i] = Scene.currentScene.LightList[i];
+            }
+
+            Vector3 light = lights[0].lightDir;
+            float l = (float)Math.Sqrt(light.x * light.x + light.y * light.y + light.z * light.z);
+            light.x /= l;
+            light.y /= l;
+            light.z /= l;
+
+            for (int i = 0; i < triangles.Count(); i++)
+            {
+                float dotProduct = 
+                    (float)(triangles[i].normalVector.x * light.x +
+                    triangles[i].normalVector.y * light.y +
+                    triangles[i].normalVector.z * light.z);
+
+                triangles[i].sym = getColor(dotProduct);
+            }
+
+
+        }
+
+        public List<Triangle3> getProjectedFaces(Vector3 cameraPosition, Vector3 cameraRotation)
+        {
+            List<Triangle3> projected = new List<Triangle3>();
+
+            for(int i = 0; i < triangles.Count(); i++)
+            {
+
+                triangles[i].recalculateNormal();
+                if (
+                    triangles[i].normalVector.x * (triangles[i].p1.global.x - cameraPosition.x) +
+                    triangles[i].normalVector.y * (triangles[i].p1.global.y - cameraPosition.y) + 
+                    triangles[i].normalVector.z * (triangles[i].p1.global.z - cameraPosition.z) < 0
+                    )
+                {
+                    projected.Add(triangles[i]);
+
+                }
+            }
+
+            return projected;
+        }
+
+        public char getColor(float brightness)
+        {
+            int lum = (int)(13 * brightness);
+            switch (lum)
+            {
+                // .:-=+*#%@
+                case 0: return ' '; break;
+                case 1: return '.'; break;
+                case 2: return ':'; break;
+                case 3: return '-'; break;
+                case 4: return '='; break;
+                case 5: return '+'; break;
+                case 6: return '*'; break;
+                case 7: return '#'; break;
+                case 8: return '%'; break;
+                case 9: return '@'; break;
+                case 10: return '@'; break;
+
+                default: return '█'; break;
+            }
+        }
+
+        public bool LoadFromObjFile(String sfilename)
+        {
+            StreamReader reader = new StreamReader(sfilename);
+            List<Point3D> verts = new List<Point3D>();
+            List<Triangle3> trig = new List<Triangle3>();
+            string line = reader.ReadLine();
+            while ((line = reader.ReadLine()) != null)
+            {
+
+
+                if (line[0] == 'v')
+                {
+
+                    string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                    
+                    Console.WriteLine(numbers[0]); 
+                    Console.WriteLine(numbers[1]); 
+
+                    Console.WriteLine(numbers[3]);
+
+                    Console.WriteLine(numbers[5]);
+                    verts.Add(new Point3D(location,
+                        Convert.ToDouble(numbers[1]) * scale,
+                        Convert.ToDouble(numbers[3]) * scale,
+                        Convert.ToDouble(numbers[5]) * scale
+                        ));
+
+
+                }
+                if (line[0] == 'f')
+                {
+
+                    string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                    Console.WriteLine(numbers[0] + " "+ numbers[1] + " " + numbers[3] + " " + numbers[5]);
+
+                    trig.Add(new Triangle3(
+                        verts[Convert.ToInt32(numbers[1]) - 1],
+                        verts[Convert.ToInt32(numbers[3]) - 1],
+                        verts[Convert.ToInt32(numbers[5]) - 1]
+                        ));
+
+
+                }
+
+
+            }
+
+
+            triangles.AddRange(trig);
+
+            verticies.AddRange(verts);
+
+            return true;
         }
     }
 }

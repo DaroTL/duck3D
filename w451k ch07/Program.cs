@@ -8,13 +8,21 @@ namespace w451k_ch07
     {
         static List<Object> objects = new List<Object>();
         static Renderer render;
+        static Vector3 cameraPosition = new Vector3(0, 0, -60);
+        static Vector3 cameraRotation = new Vector3(0, 0, 0);
         static void Main(string[] args)
         {
-            
+
             render = new Renderer();
+
+            Scene mainScene = new Scene();
+
             Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             objects.Add(cube);
-            cube.addVert(new Point3D(cube.location, 0, 0, 0, 100));
+            cube.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
+
+
+/*            cube.addVert(new Point3D(cube.location, 0, 0, 0, 100));
             cube.addVert(new Point3D(cube.location, 30, 0, 0, 101));
             cube.addVert(new Point3D(cube.location, 30, 30, 0, 102));
             cube.addVert(new Point3D(cube.location, 0, 30, 0, 103));
@@ -22,31 +30,39 @@ namespace w451k_ch07
             cube.addVert(new Point3D(cube.location, 30, 0, 30, 111));
             cube.addVert(new Point3D(cube.location, 30, 30, 30, 112));
             cube.addVert(new Point3D(cube.location, 0, 30, 30, 113));
-            cube.connectVerts(new int[] { 100, 101});
-            cube.connectVerts(new int[] { 101, 102 });
-            cube.connectVerts(new int[] { 102, 103 });
-            cube.connectVerts(new int[] { 103, 100 });
-            cube.connectVerts(new int[] { 110, 111 });
-            cube.connectVerts(new int[] { 111, 112 });
-            cube.connectVerts(new int[] { 112, 113 });
-            cube.connectVerts(new int[] { 113, 110 });
+            cube.connectVerts(new int[] { 100, 103, 102 });
+            cube.connectVerts(new int[] { 100, 102, 101 });
+            cube.connectVerts(new int[] { 101, 102, 112 });
+            cube.connectVerts(new int[] { 101, 112, 111 });
+            cube.connectVerts(new int[] { 111, 112, 113 });
+            cube.connectVerts(new int[] { 110, 111, 113 });
+            cube.connectVerts(new int[] { 110, 113, 103 });
+            cube.connectVerts(new int[] { 110, 103, 100 });
+            cube.connectVerts(new int[] { 103, 113, 112 });
+            cube.connectVerts(new int[] { 103, 112, 102 });
+            cube.connectVerts(new int[] { 111, 110, 100 });
+            cube.connectVerts(new int[] { 111, 100, 101 });*/
 
-            /*            cube.rotate(new Vector3(122, 160, 122));*/
-            /*            foreach (Line3 x in cube.lines)
-                        {
-                            render.plotLine(new Line2(x.p1.convertVectorTo2D(), x.p2.convertVectorTo2D()));
-                        }
-                        render.renderFastAsFuck();*/
+
+            mainScene.ObjectList.Add(cube);
+
+            Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51));
+            light.lightDir = new Vector3(0, 0, -1);
+
+            mainScene.LightList.Add(light); 
+
+            Scene.setCurrentScene(mainScene);
+
+
             Thread rend = new Thread(startrnd);
 
             rend.Start();
             for (; ; )
             {
-                //0.1, -0.1, -0.1 myla oczy
-                cube.rotate(new Vector3(0.1, 0.1, 0.1));
-                
-                Thread.Sleep(28);
 
+                cube.calculateLight();
+                cube.rotateLocal(new Vector3(0.03, 0, 0));
+                Thread.Sleep(14);
 
             }
 
@@ -89,9 +105,12 @@ namespace w451k_ch07
                                 {
                                     render.ClearScreen();
                                     x.transformGlobal(new Vector3(-Convert.ToDouble(commandd[2]), -Convert.ToDouble(commandd[3]), -Convert.ToDouble(commandd[4])));
-                                    foreach (Line3 z in x.lines)
+                                    foreach (Triangle3 y in x.getProjectedFaces(cameraPosition,cameraRotation))
                                     {
-                                        render.plotLine(new Line2(z.p1.convertVectorTo2D(), z.p2.convertVectorTo2D()));
+                                        foreach(Line3 z in y.lines)
+                                        {
+                                            render.plotLine(new Line2(z.p1.projectSimple(cameraPosition, cameraRotation), z.p2.projectSimple(cameraPosition, cameraRotation)));
+                                        }
                                     }
                                     render.renderFastAsFuck();
                                 }
@@ -129,10 +148,20 @@ namespace w451k_ch07
         {
             for (; ; )
             {
-                foreach (Line3 x in objects[0].lines)
+                foreach (Triangle3 y in objects[0].getProjectedFaces(cameraPosition, cameraRotation))
                 {
-                    render.plotLine(new Line2(x.p1.convertVectorTo2D(), x.p2.convertVectorTo2D()));
-                }
+
+                    render.FillTriangle(
+                        y.p1.projectSimple(cameraPosition, cameraRotation),
+                        y.p2.projectSimple(cameraPosition, cameraRotation),
+                        y.p3.projectSimple(cameraPosition, cameraRotation)
+                        , y.sym);
+                    /*foreach (Line3 z in y.lines)
+                    {
+
+                        render.plotLine(new Line2(z.p1.projectSimple(cameraPosition, cameraRotation), z.p2.projectSimple(cameraPosition, cameraRotation)));
+                    }*/
+                }   
                 render.renderFastAsFuckFrame();
                 
             }
