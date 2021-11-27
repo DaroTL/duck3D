@@ -17,7 +17,7 @@ namespace w451k_ch07
 
         public Point3D(Vector3 global, double x, double y, double z, int _id = 0)
         {
-            this.local = new Vector3(x,y,z);
+            this.local = new Vector3(x, y, z);
             this.global = new Vector3(x + global.x, y + global.y, z + global.z);
             if (_id == 0) id = idCount;
             else id = _id;
@@ -29,30 +29,62 @@ namespace w451k_ch07
             return id;
         }
 
-        public Vector2 convertVectorTo2D()
+        public Vector2 projectSimple()
         {
+            if(Camera.currentCamera != null)
+            {
+                Vector3 camPos = Camera.currentCamera.cameraPosition;
+                Vector3 camRot = Camera.currentCamera.cameraRotation;
 
-            Vector3 a = global;
-            Vector3 c = new Vector3(0, 0, -60);
-            Vector3 o = new Vector3(0, 0, 0);
-            Vector3 e = new Vector3(c.x, c.y, c.z + 20);
-            Matrix d = new Matrix(new double[3, 1]);
-            Matrix m1 = new Matrix(new double[,] { { 1, 0, 0 }, { 0, Math.Cos(o.x), Math.Sin(o.x) }, { 0, -Math.Sin(o.x), Math.Cos(o.x) } });
-            Matrix m2 = new Matrix(new double[,] { { Math.Cos(o.y), 0, -Math.Sin(o.y) }, { 0, 1, 0 }, { Math.Sin(o.y), 0, Math.Cos(o.y) } });
-            Matrix m3 = new Matrix(new double[,] { { Math.Cos(o.z), Math.Sin(o.z), 0 }, { -Math.Sin(o.z), Math.Cos(o.z), 0 }, { 0, 0, 1 } });
-            Matrix aMatrix = new Matrix(new double[,] { { a.x }, { a.y }, { a.z } });
-            Matrix cMatrix = new Matrix(new double[,] { { c.x }, { c.y }, { c.z } });
-            Matrix aminusc = aMatrix.subtract(cMatrix);
-            Matrix temp;
-            temp = m1.multiply(m2);
-            temp = temp.multiply(m3);
-            d = temp.multiply(aminusc);
-            Vector3 dVector = new Vector3(d.tablica[0, 0], d.tablica[1, 0], d.tablica[2, 0]);
-            Vector2 vect = new Vector2((int)((e.z / dVector.z * dVector.x) + e.x), (int)((e.z / dVector.z * dVector.y) + e.y));
+                Vector3 a = global;
+                Vector3 e = new Vector3(camPos.x, camPos.y, camPos.z + Camera.currentCamera.cameraScreenDistance);
+                Matrix d = new Matrix(new double[3, 1]);
 
-            return vect;
+
+
+                Matrix mx = new Matrix(new double[,] {
+                { 1, 0, 0 },
+                { 0, Math.Cos(camRot.x), Math.Sin(camRot.x) },
+                { 0, -Math.Sin(camRot.x), Math.Cos(camRot.x) }
+            });
+
+
+                Matrix my = new Matrix(new double[,] {
+                { Math.Cos(camRot.y), 0, -Math.Sin(camRot.y) },
+                { 0, 1, 0 },
+                { Math.Sin(camRot.y), 0, Math.Cos(camRot.y) }
+            });
+
+
+                Matrix mz = new Matrix(new double[,] {
+                { Math.Cos(camRot.z), Math.Sin(camRot.z), 0 },
+                { -Math.Sin(camRot.z), Math.Cos(camRot.z), 0 },
+                { 0, 0, 1 }
+            });
+
+
+                Matrix aminusc =
+                    new Matrix(new double[,] {
+                    { a.x }, { a.y }, { a.z } }
+                    )
+                    .subtract(
+                        new Matrix(new double[,] {
+                        {camPos.x }, { camPos.y }, { camPos.z }
+                        }));
+
+
+                d = mx.multiply(my).multiply(mz).multiply(aminusc);
+                Vector3 dVector = new Vector3(d.tablica[0, 0], d.tablica[1, 0], d.tablica[2, 0]);
+                Vector2 vect = new Vector2((int)((e.z / dVector.z * dVector.x) + e.x), (int)((e.z / dVector.z * dVector.y) + e.y));
+                return vect;
+            }
+
+
+            return new Vector2(0,0);
 
         }
+
+
 
         public void setGlobal(Vector3 x)
         {

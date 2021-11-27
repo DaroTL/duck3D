@@ -1,48 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using w451k_ch07.three_dimension_menagment;
 
 namespace w451k_ch07
 {
     public class Program
     {
-        static List<Object> objects = new List<Object>();
+
         static Renderer render;
         static void Main(string[] args)
         {
-            
-            render = new Renderer();
-            Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-            objects.Add(cube);
-            cube.addVert(new Point3D(cube.location, 0, 0, 0, 100));
-            cube.addVert(new Point3D(cube.location, 30, 0, 0, 101));
-            cube.addVert(new Point3D(cube.location, 30, 30, 0, 102));
-            cube.addVert(new Point3D(cube.location, 0, 30, 0, 103));
-            cube.addVert(new Point3D(cube.location, 0, 0, 30, 110));
-            cube.addVert(new Point3D(cube.location, 30, 0, 30, 111));
-            cube.addVert(new Point3D(cube.location, 30, 30, 30, 112));
-            cube.addVert(new Point3D(cube.location, 0, 30, 30, 113));
-            cube.connectVerts(new int[] { 100, 101 });
-            cube.connectVerts(new int[] { 101, 102 });
-            cube.connectVerts(new int[] { 102, 103 });
-            cube.connectVerts(new int[] { 103, 100 });
-            cube.connectVerts(new int[] { 110, 111 });
-            cube.connectVerts(new int[] { 111, 112 });
-            cube.connectVerts(new int[] { 112, 113 });
-            cube.connectVerts(new int[] { 113, 110 });
-            cube.connectVerts(new int[] { 110, 100 });
-            cube.connectVerts(new int[] { 111, 101 });
-            cube.connectVerts(new int[] { 112, 102 });
-            cube.connectVerts(new int[] { 113, 103 });
 
-            foreach (Line3 x in cube.lines)
+            render = new Renderer();
+
+            Scene mainScene = new Scene("scene1");
+
+            Camera cam1 = new Camera(new Vector3(0, 0, -100), new Vector3(0, 0, 0), 20, "cam1");
+
+            mainScene.CameraList.Add(cam1);
+            Scene.setCurrentScene(mainScene);
+            Camera.setCurrentCamera(cam1);
+
+            Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+            Object dik = new Object("dik", new Vector3(60, 0, 20), new Vector3(0, 0, 0));
+            cube.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\monke.obj");
+            dik.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
+            mainScene.ObjectList.Add(cube);
+            mainScene.ObjectList.Add(dik);
+            Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51), "light1");
+            light.lightDir = new Vector3(0, 0, -1);
+
+            mainScene.LightList.Add(light);
+            render.scale = 1;
+            Scene.setCurrentScene(mainScene);
+            cube.getProjectedFaces();
+
+            Thread rend = new Thread(startrnd);
+            List<Triangle3> toprojectL = new List<Triangle3>();
+            foreach (Object x in Scene.currentScene.ObjectList)
             {
-                render.plotLine(new Line2(x.p1.convertVectorTo2D(), x.p2.convertVectorTo2D()));
+                x.calculateLight();
+                toprojectL.AddRange(x.getProjectedFaces());
+
+            }
+            Triangle3[] toprojectA = toprojectL.ToArray();
+            Math3D.timSort(ref toprojectA, toprojectA.Length);
+            toprojectA.Reverse();
+            foreach (Triangle3 y in toprojectA.ToList())
+            {
+
+
+                render.FillTriangle(
+                    y.p1.projectSimple(),
+                    y.p2.projectSimple(),
+                    y.p3.projectSimple()
+                    , y.sym);
+
             }
             render.renderFastAsFuck();
-            Thread rend = new Thread(startrnd);
-            
-            //rend.Start();
+            rend.Start();
+            for (; ; )
+            {
+
+                cube.calculateLight();
+                cube.rotate(new Vector3(0.01, 0.01, 0.01));
+                dik.rotate(new Vector3(-0.01, -0.01, -0.01));
+                Thread.Sleep(14);
+
+            }
+
             for (; ; )
             {
                 string command = Console.ReadLine();
@@ -66,7 +94,7 @@ namespace w451k_ch07
                         {
                             if (commandd[1] == "objects")
                             {
-                                foreach (Object x in objects)
+                                foreach(Object x in Scene.currentScene.ObjectList)
                                 {
                                     Console.WriteLine(x.name + "      position: ( x: " + x.location.x + " y: " + x.location.y + " z: " + x.location.z + " )");
                                 }
@@ -77,15 +105,18 @@ namespace w451k_ch07
                         bool active = true;
                         if (commandd.Length == 5)
                         {
-                            foreach (Object x in objects)
+                            foreach(Object x in Scene.currentScene.ObjectList)
                             {
                                 if (x.name == commandd[1])
                                 {
                                     render.ClearScreen();
                                     x.transformGlobal(new Vector3(-Convert.ToDouble(commandd[2]), -Convert.ToDouble(commandd[3]), -Convert.ToDouble(commandd[4])));
-                                    foreach (Line3 z in x.lines)
+                                    foreach (Triangle3 y in x.getProjectedFaces())
                                     {
-                                        render.plotLine(new Line2(z.p1.convertVectorTo2D(), z.p2.convertVectorTo2D()));
+                                        foreach(Line3 z in y.lines)
+                                        {
+                                            render.plotLine(new Line2(z.p1.projectSimple(), z.p2.projectSimple()));
+                                        }
                                     }
                                     render.renderFastAsFuck();
                                 }
@@ -721,14 +752,56 @@ namespace w451k_ch07
 
             static void startrnd()
         {
+
             for (; ; )
             {
-                foreach (Line3 x in objects[0].lines)
+                if (render.wireframe)
                 {
-                    render.plotLine(new Line2(x.p1.convertVectorTo2D(), x.p2.convertVectorTo2D()));
+                    foreach (Object x in Scene.currentScene.ObjectList)
+                    {
+                        foreach (Triangle3 y in x.triangles)
+                        {
+
+
+
+                            foreach (Line3 z in y.lines)
+                            {
+
+                                render.plotLine(new Line2(z.p1.projectSimple(), z.p2.projectSimple()));
+                            }
+                        }
+                    }
+                    render.renderFastAsFuckFrame();
                 }
-                render.renderFastAsFuckFrame();
-                
+                else
+                {
+                    List<Triangle3> toprojectL = new List<Triangle3>();
+                    foreach (Object x in Scene.currentScene.ObjectList)
+                    {
+                        x.calculateLight();
+                        toprojectL.AddRange(x.getProjectedFaces());
+
+                    }
+                    Triangle3[] toprojectA = toprojectL.ToArray();
+                    Math3D.timSort(ref toprojectA, toprojectA.Length);
+                    toprojectL = toprojectA.ToList();
+                    toprojectL.Reverse();
+
+                    foreach (Triangle3 y in toprojectL)
+                    {
+
+
+                        render.FillTriangle(
+                            y.p1.projectSimple(),
+                            y.p2.projectSimple(),
+                            y.p3.projectSimple()
+                            , y.sym);
+
+                    }
+                    render.renderFastAsFuckFrame();
+                }
+
+
             }
         }
 

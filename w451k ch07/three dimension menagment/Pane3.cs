@@ -28,7 +28,11 @@ namespace w451k_ch07
 
         public Pane2 convertPane3()
         {
-            return new Pane2(p1.convertVectorTo2D(), p2.convertVectorTo2D(), p3.convertVectorTo2D(), p4.convertVectorTo2D()); 
+            return new Pane2(p1.projectSimple(),
+                p2.projectSimple(),
+                p3.projectSimple(),
+                p4.projectSimple()
+                ); 
         }
     }
 }
