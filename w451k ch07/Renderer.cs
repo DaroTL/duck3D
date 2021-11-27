@@ -19,6 +19,7 @@ namespace w451k_ch07
         int offsetX;
         int offsetY;
         int horizontalOffset = 2;
+        public float scale = 1;
 
         public Renderer(char n_background, char n_fill, char n_contour, int screenWidth, int screenHeight)
         {
@@ -248,8 +249,9 @@ namespace w451k_ch07
 
         public void plotLine(Line2 line)
         {
-            float y1 = line.v1.y* horizontalOffset, y2 = line.v2.y * horizontalOffset;
-            if(Math.Abs(y2 - y1) < Math.Abs(line.v2.x - line.v1.x))
+            float y1 = line.v1.y* horizontalOffset * scale, y2 = line.v2.y * horizontalOffset * scale;
+            float x1 = line.v1.x * scale, x2 = line.v2.x * scale;
+            if (Math.Abs(y2 - y1) < Math.Abs(line.v2.x - line.v1.x))
             {
                 if(line.v2.y == line.v1.y)
                 {
@@ -293,9 +295,9 @@ namespace w451k_ch07
         public void FillTriangle(Vector2 p0, Vector2 p1, Vector2 p2, char col)
         {
 
-            Vector2 v0 = new Vector2(p0.x * horizontalOffset, p0.y);
-            Vector2 v1 = new Vector2(p1.x * horizontalOffset, p1.y);
-            Vector2 v2 = new Vector2(p2.x * horizontalOffset, p2.y);
+            Vector2 v0 = new Vector2(p0.x * horizontalOffset * scale, p0.y * scale);
+            Vector2 v1 = new Vector2(p1.x * horizontalOffset * scale, p1.y * scale);
+            Vector2 v2 = new Vector2(p2.x * horizontalOffset * scale, p2.y * scale);
 
             if (v1.y < v0.y) swap(ref v0, ref v1);
             if(v2.y < v1.y) swap(ref v1, ref v2);

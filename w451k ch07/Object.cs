@@ -8,7 +8,7 @@ namespace w451k_ch07
 {
     public class Object
     {
-        public String name = "";
+        public readonly String name = "";
         public Vector3 location = new Vector3(0, 0, 0);
         public Vector3 origin = new Vector3(15, 15, 15);
         Vector3 rotation = new Vector3(0, 0, 0);
@@ -16,6 +16,9 @@ namespace w451k_ch07
         public List<Line3> lines = new List<Line3>();
         public List<Triangle3> triangles = new List<Triangle3>();
         public float scale = 2;
+
+
+
 
         public Object(string _name, Vector3 _location, Vector3 _rotation)
         {
@@ -46,7 +49,6 @@ namespace w451k_ch07
                         
                         if (y.getid() == c)
                         {
-                            Console.WriteLine(y.getid());
                             toConnect.Add(y);
                         }
                     }    
@@ -255,11 +257,14 @@ namespace w451k_ch07
 
         }
 
-        public List<Triangle3> getProjectedFaces(Vector3 cameraPosition, Vector3 cameraRotation)
+        public List<Triangle3> getProjectedFaces( )
         {
             List<Triangle3> projected = new List<Triangle3>();
 
-            for(int i = 0; i < triangles.Count(); i++)
+            Vector3 cameraPosition = Camera.currentCamera.cameraPosition;
+
+
+            for (int i = 0; i < triangles.Count(); i++)
             {
 
                 triangles[i].recalculateNormal();
@@ -273,7 +278,14 @@ namespace w451k_ch07
 
                 }
             }
-
+            //foreach (Triangle3 triangle in projected) Console.WriteLine((triangle.p1.global.z + triangle.p2.global.z + triangle.p3.global.z) / 3);
+/*            Triangle3[] arr = projected.ToArray();
+            timSort(ref arr, projected.Count());*/
+/*            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (Triangle3 triangle in arr) Console.WriteLine((triangle.p1.global.z + triangle.p2.global.z + triangle.p3.global.z) / 3);
+*/
             return projected;
         }
 
@@ -283,19 +295,21 @@ namespace w451k_ch07
             switch (lum)
             {
                 // .:-=+*#%@
-                case 0: return ' '; break;
-                case 1: return '.'; break;
-                case 2: return ':'; break;
-                case 3: return '-'; break;
-                case 4: return '='; break;
-                case 5: return '+'; break;
-                case 6: return '*'; break;
-                case 7: return '#'; break;
-                case 8: return '%'; break;
-                case 9: return '@'; break;
-                case 10: return '@'; break;
+                case 0: return ' ';
+                case 1: return '.';
+                case 2: return ':';
+                case 3: return '-';
+                case 4: return '=';
+                case 5: return '+';
+                case 6: return '*';
+                case 7: return '#';
+                case 8: return '#';
+                case 9: return '%';
+                case 10: return '@';
+                case 11: return '@';
 
-                default: return '█'; break;
+
+                default: return '█';
             }
         }
 
@@ -313,13 +327,6 @@ namespace w451k_ch07
                 {
 
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
-                    
-                    Console.WriteLine(numbers[0]); 
-                    Console.WriteLine(numbers[1]); 
-
-                    Console.WriteLine(numbers[3]);
-
-                    Console.WriteLine(numbers[5]);
                     verts.Add(new Point3D(location,
                         Convert.ToDouble(numbers[1]) * scale,
                         Convert.ToDouble(numbers[3]) * scale,
@@ -332,7 +339,6 @@ namespace w451k_ch07
                 {
 
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
-                    Console.WriteLine(numbers[0] + " "+ numbers[1] + " " + numbers[3] + " " + numbers[5]);
 
                     trig.Add(new Triangle3(
                         verts[Convert.ToInt32(numbers[1]) - 1],
@@ -353,5 +359,7 @@ namespace w451k_ch07
 
             return true;
         }
+
+
     }
 }

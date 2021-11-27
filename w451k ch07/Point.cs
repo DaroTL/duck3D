@@ -29,50 +29,58 @@ namespace w451k_ch07
             return id;
         }
 
-        public Vector2 projectSimple(Vector3 cameraPosition, Vector3 cameraRotation, double cameraScreenDistance = 20)
+        public Vector2 projectSimple()
         {
-            Vector3 a = global;
-            Vector3 e = new Vector3(cameraPosition.x, cameraPosition.y, cameraPosition.z + cameraScreenDistance);
-            Matrix d = new Matrix(new double[3, 1]);
+            if(Camera.currentCamera != null)
+            {
+                Vector3 camPos = Camera.currentCamera.cameraPosition;
+                Vector3 camRot = Camera.currentCamera.cameraRotation;
+
+                Vector3 a = global;
+                Vector3 e = new Vector3(camPos.x, camPos.y, camPos.z + Camera.currentCamera.cameraScreenDistance);
+                Matrix d = new Matrix(new double[3, 1]);
 
 
 
-            Matrix mx = new Matrix(new double[,] {
+                Matrix mx = new Matrix(new double[,] {
                 { 1, 0, 0 },
-                { 0, Math.Cos(cameraRotation.x), Math.Sin(cameraRotation.x) },
-                { 0, -Math.Sin(cameraRotation.x), Math.Cos(cameraRotation.x) }
+                { 0, Math.Cos(camRot.x), Math.Sin(camRot.x) },
+                { 0, -Math.Sin(camRot.x), Math.Cos(camRot.x) }
             });
 
 
-            Matrix my = new Matrix(new double[,] {
-                { Math.Cos(cameraRotation.y), 0, -Math.Sin(cameraRotation.y) },
+                Matrix my = new Matrix(new double[,] {
+                { Math.Cos(camRot.y), 0, -Math.Sin(camRot.y) },
                 { 0, 1, 0 },
-                { Math.Sin(cameraRotation.y), 0, Math.Cos(cameraRotation.y) }
+                { Math.Sin(camRot.y), 0, Math.Cos(camRot.y) }
             });
 
 
-            Matrix mz = new Matrix(new double[,] {
-                { Math.Cos(cameraRotation.z), Math.Sin(cameraRotation.z), 0 },
-                { -Math.Sin(cameraRotation.z), Math.Cos(cameraRotation.z), 0 },
+                Matrix mz = new Matrix(new double[,] {
+                { Math.Cos(camRot.z), Math.Sin(camRot.z), 0 },
+                { -Math.Sin(camRot.z), Math.Cos(camRot.z), 0 },
                 { 0, 0, 1 }
             });
 
 
-            Matrix aminusc =
-                new Matrix(new double[,] {
-                    { a.x }, { a.y }, { a.z } }
-                )
-                .subtract(
+                Matrix aminusc =
                     new Matrix(new double[,] {
-                        { cameraPosition.x }, { cameraPosition.y }, { cameraPosition.z }
-                    }));
+                    { a.x }, { a.y }, { a.z } }
+                    )
+                    .subtract(
+                        new Matrix(new double[,] {
+                        {camPos.x }, { camPos.y }, { camPos.z }
+                        }));
 
 
-            d = mx.multiply(my).multiply(mz).multiply(aminusc);
-            Vector3 dVector = new Vector3(d.tablica[0, 0], d.tablica[1, 0], d.tablica[2, 0]);
-            Vector2 vect = new Vector2((int)((e.z / dVector.z * dVector.x) + e.x), (int)((e.z / dVector.z * dVector.y) + e.y));
+                d = mx.multiply(my).multiply(mz).multiply(aminusc);
+                Vector3 dVector = new Vector3(d.tablica[0, 0], d.tablica[1, 0], d.tablica[2, 0]);
+                Vector2 vect = new Vector2((int)((e.z / dVector.z * dVector.x) + e.x), (int)((e.z / dVector.z * dVector.y) + e.y));
+                return vect;
+            }
 
-            return vect;
+
+            return new Vector2(0,0);
 
         }
 
