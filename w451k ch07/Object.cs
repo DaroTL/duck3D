@@ -85,23 +85,19 @@ namespace w451k_ch07
                 z.setGlobal(x);
             }
         }
-        void rotateX(double rotation)
+        public void rotateX(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
             foreach (Point3D z in verticies)
             {
-
-                
                 double newx = z.global.x;
                 double newy = (z.global.y * anglecos) - (z.global.z * anglesin);
                 double newz = (z.global.z * anglecos) + (z.global.y * anglesin);
-
-
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateX(double rotation, Vector3 point)
+        public void rotateX(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -120,7 +116,7 @@ namespace w451k_ch07
 
 
 
-        void rotateY(double rotation)
+        public void rotateY(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -136,7 +132,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateY(double rotation, Vector3 point)
+        public void rotateY(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -153,7 +149,7 @@ namespace w451k_ch07
 
 
 
-        void rotateZ(double rotation)
+        public void rotateZ(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -169,7 +165,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateZ(double rotation, Vector3 point)
+        public void rotateZ(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
