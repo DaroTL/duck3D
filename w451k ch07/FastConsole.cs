@@ -15,6 +15,7 @@ namespace w451k_ch07
 
             // avoid special "ShadowBuffer" for hard-coded size 0x14000 in 'BufferedStream' 
             str = new BufferedStream(Console.OpenStandardOutput(), 0x15000);
+
         }
 
         public static void WriteLine(String s) => Write(s + "\r\n");

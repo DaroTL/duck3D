@@ -49,18 +49,6 @@ namespace w451k_ch07.three_dimension_menagment
                 }
                 arr[j + 1] = temp;
             }
-            /*        
-            for (int i = left + 1; i <= right; i++)
-            {
-                int temp = arr[i];
-                int j = i - 1;
-                while (j >= left && arr[j] > temp)
-                {
-                    arr[j+1] = arr[j];
-                    j--;
-                }
-                arr[j+1] = temp;
-            }*/
         }
 
         public static void merge(ref Triangle3[] arr, int l, int m, int r)

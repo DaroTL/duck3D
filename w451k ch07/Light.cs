@@ -10,10 +10,11 @@ namespace w451k_ch07
     {
         Point3D location;
         public Vector3 lightDir;
-
-        public Light(Point3D location)
+        public string name;
+        public Light(Point3D location, string name)
         {
             this.location = location;
+            this.name = name;
         }
     }
 }

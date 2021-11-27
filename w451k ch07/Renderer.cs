@@ -20,6 +20,7 @@ namespace w451k_ch07
         int offsetY;
         int horizontalOffset = 2;
         public float scale = 1;
+        public bool wireframe = false;
 
         public Renderer(char n_background, char n_fill, char n_contour, int screenWidth, int screenHeight)
         {
@@ -290,7 +291,7 @@ namespace w451k_ch07
 
 
         }
-        #region fille
+
 
         public void FillTriangle(Vector2 p0, Vector2 p1, Vector2 p2, char col)
         {
@@ -393,54 +394,6 @@ namespace w451k_ch07
             }
         }
 
-/*        public void FillSimple(Vector2 v)
-        {
-            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
-            {
-                addToScreen(v.x, v.y, fill);
-                FillSimple(new Vector2(v.x + 1, v.y));
-                FillSimple(new Vector2(v.x, v.y + 1));
-                FillSimple(new Vector2(v.x - 1, v.y));
-                FillSimple(new Vector2(v.x, v.y - 1));
-                
-            }
-        }
-
-        public void dFillSimple(Vector2 v)
-        {
-            Console.WriteLine(v.x + " " + v.y + screen[v.x, v.y]);
-            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
-            {
-                screen[v.x, v.y] = fill;
-                String asodfjfoas = Console.ReadLine();
-                render();
-                Console.WriteLine(v.x + " " + v.y);
-
-                dFillSimple(new Vector2(v.x + 1, v.y));
-                dFillSimple(new Vector2(v.x, v.y + 1));
-                dFillSimple(new Vector2(v.x - 1, v.y));
-                dFillSimple(new Vector2(v.x, v.y - 1));
-
-            }
-        }
-
-        public void Fill8(Vector2 v)
-        {
-            if (screen[v.x, v.y] != contour && screen[v.x, v.y] != fill)
-            {
-                screen[v.x, v.y] = fill;
-                Fill8(new Vector2(v.x + 1, v.y));
-                Fill8(new Vector2(v.x, v.y + 1));
-                Fill8(new Vector2(v.x - 1, v.y));
-                Fill8(new Vector2(v.x, v.y - 1));
-                Fill8(new Vector2(v.x - 1, v.y - 1));
-                Fill8(new Vector2(v.x - 1, v.y + 1));
-                Fill8(new Vector2(v.x + 1, v.y - 1));
-                Fill8(new Vector2(v.x + 1, v.y + 1));
-
-            }
-        }*/
-        #endregion fille
         public void drawRectangleRaw(Pane2 p)
         {
             plotLine(p.lines[0]);
@@ -467,30 +420,6 @@ namespace w451k_ch07
             plotLine(t.l3);
         }
 
-
-/*        public void drawXgon(Vector2[] points)
-        {
-            if(points.GetLength(0) > 2)
-            {
-                int[] x = new int[points.GetLength(0)],y = new int[points.GetLength(0)];
-                for (int m = 0; m < points.GetLength(0); m++)
-                {
-                    if(m != points.GetLength(0) - 1)
-                    {
-                         plotLine(new Line2(points[m], points[m + 1]));
-                    }
-                    else
-                    {
-                        plotLine(new Line2(points[m], points[0]));
-                    }
-
-                    x[m] = points[m].x;
-                    y[m] = points[m].y;
-                }
-                 
-            }
-        }*/
-
         public int[] getPointInShape(int minX, int minY)
         {
             return new int[] {0,0};
@@ -503,11 +432,6 @@ namespace w451k_ch07
             {
                 screen[offsetY + (int)Math.Ceiling(y), (offsetX - (int)Math.Ceiling(x))] = addVar;
             }
-
-
-
-
-
 
         }
         public char getScreenField(int x, int y)

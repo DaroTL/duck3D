@@ -25,6 +25,7 @@ namespace w451k_ch07
             name = _name;
             location = _location;
             rotation = _rotation;
+
         }
 
         public void addVert(Point3D x)
@@ -68,20 +69,7 @@ namespace w451k_ch07
                     }
                     else
                     {
-                        /*                        
-                        if (z != 0 && (float)(z + 1) % 3 == 0 && triangle)
-                        {
 
-                            lines.Add(new Line3(toConnect[z], toConnect[z - 2]));
-                            triangles.Add(new Triangle3(toConnect[z], toConnect[z - 1], toConnect[z - 2]));
-                        }
-                        if (z + 1 == toConnect.Count - 1)
-                        {
-
-                            *//*lines.Add(new Line3(toConnect[0], toConnect[toConnect.Count -1]));*//*
-                            triangles.Add(new Triangle3(toConnect[z + 1], toConnect[z], toConnect[0]));
-
-                        }*/
                     }
 
 
@@ -278,14 +266,7 @@ namespace w451k_ch07
 
                 }
             }
-            //foreach (Triangle3 triangle in projected) Console.WriteLine((triangle.p1.global.z + triangle.p2.global.z + triangle.p3.global.z) / 3);
-/*            Triangle3[] arr = projected.ToArray();
-            timSort(ref arr, projected.Count());*/
-/*            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (Triangle3 triangle in arr) Console.WriteLine((triangle.p1.global.z + triangle.p2.global.z + triangle.p3.global.z) / 3);
-*/
+
             return projected;
         }
 

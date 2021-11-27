@@ -12,27 +12,6 @@ namespace w451k_ch07
         static Renderer render;
         static void Main(string[] args)
         {
-            /*            cube.addVert(new Point3D(cube.location, 0, 0, 0, 100));
-            cube.addVert(new Point3D(cube.location, 30, 0, 0, 101));
-            cube.addVert(new Point3D(cube.location, 30, 30, 0, 102));
-            cube.addVert(new Point3D(cube.location, 0, 30, 0, 103));
-            cube.addVert(new Point3D(cube.location, 0, 0, 30, 110));
-            cube.addVert(new Point3D(cube.location, 30, 0, 30, 111));
-            cube.addVert(new Point3D(cube.location, 30, 30, 30, 112));
-            cube.addVert(new Point3D(cube.location, 0, 30, 30, 113));
-            cube.connectVerts(new int[] { 100, 103, 102 });
-            cube.connectVerts(new int[] { 100, 102, 101 });
-            cube.connectVerts(new int[] { 101, 102, 112 });
-            cube.connectVerts(new int[] { 101, 112, 111 });
-            cube.connectVerts(new int[] { 111, 112, 113 });
-            cube.connectVerts(new int[] { 110, 111, 113 });
-            cube.connectVerts(new int[] { 110, 113, 103 });
-            cube.connectVerts(new int[] { 110, 103, 100 });
-            cube.connectVerts(new int[] { 103, 113, 112 });
-            cube.connectVerts(new int[] { 103, 112, 102 });
-            cube.connectVerts(new int[] { 111, 110, 100 });
-            cube.connectVerts(new int[] { 111, 100, 101 });*/
-
 
             render = new Renderer();
 
@@ -47,10 +26,10 @@ namespace w451k_ch07
             Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             Object dik = new Object("dik", new Vector3(60, 0, 20), new Vector3(0, 0, 0));
             cube.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\monke.obj");
-            dik.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\cube.obj");
+            dik.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
             mainScene.ObjectList.Add(cube);
             mainScene.ObjectList.Add(dik);
-            Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51));
+            Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51), "light1");
             light.lightDir = new Vector3(0, 0, -1);
 
             mainScene.LightList.Add(light);
@@ -175,46 +154,53 @@ namespace w451k_ch07
 
             for (; ; )
             {
-                List<Triangle3> toprojectL = new List<Triangle3>();
-                foreach (Object x in Scene.currentScene.ObjectList)
+                if (render.wireframe)
                 {
-                    x.calculateLight();
-                    toprojectL.AddRange(x.getProjectedFaces());
+                    foreach (Object x in Scene.currentScene.ObjectList)
+                    {
+                        foreach (Triangle3 y in x.triangles)
+                        {
 
+
+
+                            foreach (Line3 z in y.lines)
+                            {
+
+                                render.plotLine(new Line2(z.p1.projectSimple(), z.p2.projectSimple()));
+                            }
+                        }
+                    }
+                    render.renderFastAsFuckFrame();
                 }
-                Triangle3[] toprojectA = toprojectL.ToArray();
-                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                toprojectL = toprojectA.ToList();
-                toprojectL.Reverse();
-
-                foreach (Triangle3 y in toprojectL)
+                else
                 {
+                    List<Triangle3> toprojectL = new List<Triangle3>();
+                    foreach (Object x in Scene.currentScene.ObjectList)
+                    {
+                        x.calculateLight();
+                        toprojectL.AddRange(x.getProjectedFaces());
 
+                    }
+                    Triangle3[] toprojectA = toprojectL.ToArray();
+                    Math3D.timSort(ref toprojectA, toprojectA.Length);
+                    toprojectL = toprojectA.ToList();
+                    toprojectL.Reverse();
 
-                    render.FillTriangle(
-                        y.p1.projectSimple(),
-                        y.p2.projectSimple(),
-                        y.p3.projectSimple()
-                        , y.sym);
-
-                }
-                render.renderFastAsFuckFrame();
-/*                foreach (Triangle3 y in Scene.currentScene.ObjectList[0].getProjectedFaces())
-                {
-
-                    render.FillTriangle(
-                        y.p1.projectSimple(),
-                        y.p2.projectSimple(),
-                        y.p3.projectSimple()
-                        , y.sym);
-                    *//*foreach (Line3 z in y.lines)
+                    foreach (Triangle3 y in toprojectL)
                     {
 
-                        render.plotLine(new Line2(z.p1.projectSimple(cameraPosition, cameraRotation), z.p2.projectSimple(cameraPosition, cameraRotation)));
-                    }*//*
-                }   
-                render.renderFastAsFuckFrame();*/
-                
+
+                        render.FillTriangle(
+                            y.p1.projectSimple(),
+                            y.p2.projectSimple(),
+                            y.p3.projectSimple()
+                            , y.sym);
+
+                    }
+                    render.renderFastAsFuckFrame();
+                }
+
+
             }
         }
 
