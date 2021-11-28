@@ -23,8 +23,8 @@ namespace w451k_ch07
 
             Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             Object dik = new Object("dik", new Vector3(60, 0, 20), new Vector3(0, 0, 0));
-
-            
+            cube.LoadFromObjFile("C:\\Users\\Jakub\\source\\repos\\projekt-chyba\\w451k ch07\\monke.obj");
+            dik.LoadFromObjFile("C:\\Users\\Jakub\\source\\repos\\projekt-chyba\\w451k ch07\\duck.obj");
             mainScene.ObjectList.Add(cube);
             mainScene.ObjectList.Add(dik);
             Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51), "light1");
@@ -58,7 +58,7 @@ namespace w451k_ch07
             }
             render.renderFastAsFuck();
 
-            /*
+            
             rend.Start();
             
             
@@ -71,7 +71,7 @@ namespace w451k_ch07
                 Thread.Sleep(14);
 
             }
-            */
+           
 
 
             for (; ; )
@@ -84,7 +84,7 @@ namespace w451k_ch07
                     {
                     case "help":
                         {
-                            Console.WriteLine("load <object> - wczytaj plik .obj do obiektu \ncreate camera <x y z> <x y z> <odleglosc> <nazwa> - tworzy kamere o");
+                            Console.WriteLine("load <object> - wczytaj plik .obj do obiektu \ncreate camera <x y z> <x y z> <odleglosc> <nazwa> - tworzy kamere o wektorze polozenia xyz i wektorze rotacji xyz\n create scene nazwa - tworzy scene o podanej nazwie\n create light x y z x y z nazwa - tworzy swiatlo\n add x y z x y z id to <object> - dodaje point3d do obiektu\n connect id id <object> - laczy dwa Point3D nalezace do danego obiektu\n point - mazak\n show objects - wypisuje obiekty\n show cameras - wypisuje kamery\n show lights - wypisuje swiatla\n delete camera <name> - usuwa kamere\n delete scene - usuwa scene\n delete object <name> - usuwa obiekt\n detele light <name> - usuwa swiatlo\n transform camera <name> x y z - zmienia polozenie kamery o wektor x y z\n transform light <name> x y z - zmienia polozenie swiatla o wektor x y z\n transform <object> x y z - zmeinia polozenie obiektu o wektor x y z\n transform <object> - pozwala zmienic polozenie obiektu za pomoca WSAD, ENTER i BACKSPACE\n render - renderuje\n rotate animate <object> <speed> - nieskonczona rotacja obiektu o okreslonej predkosci\n rotate transform <object> - rotowanie i zmienianie polozenia obieku za pomoca wsad i strzalek jednoczesnie\n rotate <object> local - rotowanie obiektu lokalnie\n rotate object <object> around x y z - pozwala obracac obiekt dookola wektora x y z\n rotate <object> x y z local - obraca obiekt o x y z lokalnie\n set camera <name> - pozwala ustawic kamere ktora ma byc uzywana ");
                         }
                         break;
                     case "set":
