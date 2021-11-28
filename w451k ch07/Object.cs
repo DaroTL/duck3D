@@ -8,7 +8,7 @@ namespace w451k_ch07
 {
     public class Object
     {
-        public readonly String name = "";
+        public readonly string name = "";
         public Vector3 location = new Vector3(0, 0, 0);
         public Vector3 origin = new Vector3(15, 15, 15);
         Vector3 rotation = new Vector3(0, 0, 0);
@@ -25,7 +25,6 @@ namespace w451k_ch07
             name = _name;
             location = _location;
             rotation = _rotation;
-
         }
 
         public void addVert(Point3D x)
@@ -294,8 +293,9 @@ namespace w451k_ch07
 
                 if (line[0] == 'v')
                 {
-
+                    line = line.Replace(".", ",");
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                    
                     verts.Add(new Point3D(location,
                         Convert.ToDouble(numbers[1]) * scale,
                         Convert.ToDouble(numbers[3]) * scale,
@@ -306,13 +306,13 @@ namespace w451k_ch07
                 }
                 if (line[0] == 'f')
                 {
-
+                    line = line.Replace(".", ",");
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
 
                     trig.Add(new Triangle3(
-                        verts[Convert.ToInt32(numbers[1]) - 1],
-                        verts[Convert.ToInt32(numbers[3]) - 1],
-                        verts[Convert.ToInt32(numbers[5]) - 1]
+                        verts[int.Parse(numbers[1]) - 1],
+                        verts[int.Parse(numbers[3]) - 1],
+                        verts[int.Parse(numbers[5]) - 1]
                         ));
 
 

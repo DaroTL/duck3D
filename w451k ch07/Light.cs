@@ -8,7 +8,7 @@ namespace w451k_ch07
 {
     public class Light
     {
-        Point3D location;
+        public Point3D location;
         public Vector3 lightDir;
         public string name;
         public Light(Point3D location, string name)

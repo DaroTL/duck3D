@@ -11,7 +11,6 @@ C:\Users\darre\source\repos\w451k-hu7\w451k ch07\bin\Release\w451k ch07.pdb
 C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.csproj.CoreCompileInputs.cache
 C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.exe
 C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.pdb
-<<<<<<< HEAD
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\bin\Release\w451k ch07.exe.config
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\bin\Release\w451k ch07.exe
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\bin\Release\w451k ch07.pdb
@@ -19,7 +18,5 @@ C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\obj\Release\w451k ch07.cspr
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\obj\Release\w451k ch07.exe
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\obj\Release\w451k ch07.pdb
 C:\Users\Jakub\Source\Repos\projekt-chyba\w451k ch07\obj\Release\w451k ch07.csproj.AssemblyReference.cache
-=======
 C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.csproj.AssemblyReference.cache
 C:\Users\darre\source\repos\w451k-hu7\w451k ch07\obj\Release\w451k ch07.csproj.SuggestedBindingRedirects.cache
->>>>>>> 1379804b5a3c765f7401e071ce55095c9c47667a
