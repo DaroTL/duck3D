@@ -333,6 +333,7 @@ namespace w451k_ch07
 
             }
 
+            reader.Close();
 
             triangles.AddRange(trig);
 

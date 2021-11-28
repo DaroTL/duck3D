@@ -25,10 +25,29 @@ namespace w451k_ch07
 
             Object cube = new Object("cube", new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             Object dik = new Object("dik", new Vector3(60, 0, 20), new Vector3(0, 0, 0));
-            cube.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\monke.obj");
-            dik.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
+
             mainScene.ObjectList.Add(cube);
             mainScene.ObjectList.Add(dik);
+
+
+            dik.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
+
+
+            string n = Console.ReadLine();
+            Object c = new Object(n, new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+            Scene.currentScene.ObjectList.Add(c);
+
+
+            string path = Console.ReadLine();
+            foreach (Object x in Scene.currentScene.ObjectList)
+            {
+                if(x.name == n)
+                {
+                    //C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\monke.obj
+                    cube.LoadFromObjFile(path);
+                }
+            }
+
             Light light = new Light(new Point3D(new Vector3(20, 0, 0), 20, 0, 0, 51), "light1");
             light.lightDir = new Vector3(0, 0, -1);
 
