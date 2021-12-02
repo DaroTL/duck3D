@@ -68,44 +68,58 @@ namespace w451k_ch07
             
             for (; ; )
             {
-
                 cube.calculateLight();
                 cube.rotate(new Vector3(0.01, 0.01, 0.01));
                 dik.rotate(new Vector3(-0.01, -0.01, -0.01));
                 Thread.Sleep(14);
-
             }
             */
 
 
             for (; ; )
             {
-                
-                string command = Console.ReadLine();
-                string[] commandd = command.Split(' ');
-                Console.Clear();
+                try
+                {
+                    string command = Console.ReadLine();
+                    string[] commandd = command.Split(' ');
+                    Console.Clear();
                     switch (commandd[0])
                     {
-                    case "help":
-                        {
-                            Console.WriteLine("load <object> - wczytaj plik .obj do obiektu \ncreate camera <x y z> <x y z> <odleglosc> <nazwa> - tworzy kamere o");
-                        }
-                        break;
-                    case "set":
-                        {
-                            if (commandd[1] == "camera")
+                        case "wireframe":
                             {
-                                foreach (Camera x in Scene.currentScene.CameraList)
+                                if(render.wireframe == false)
                                 {
-                                    if (x.name == commandd[2])
+                                    render.wireframe = true;
+                                    Console.Clear();
+                                    Console.WriteLine("Wireframe on");
+                                }else
+                                {
+                                    render.wireframe = false;
+                                    Console.Clear();
+                                    Console.WriteLine("Wireframe off");
+                                }
+                            }
+                            break;
+                        case "help":
+                            {
+                                Console.WriteLine("load <object> - wczytaj plik .obj do obiektu \ncreate camera <x y z> <x y z> <odleglosc> <nazwa> - tworzy kamere o wektorze polozenia xyz i wektorze rotacji xyz\n create scene nazwa - tworzy scene o podanej nazwie\n create light x y z x y z nazwa - tworzy swiatlo\n add x y z x y z id to <object> - dodaje point3d do obiektu\n connect id id <object> - laczy dwa Point3D nalezace do danego obiektu\n point - mazak\n show objects - wypisuje obiekty\n show cameras - wypisuje kamery\n show lights - wypisuje swiatla\n delete camera <name> - usuwa kamere\n delete scene - usuwa scene\n delete object <name> - usuwa obiekt\n detele light <name> - usuwa swiatlo\n transform camera <name> x y z - zmienia polozenie kamery o wektor x y z\n transform light <name> x y z - zmienia polozenie swiatla o wektor x y z\n transform <object> x y z - zmeinia polozenie obiektu o wektor x y z\n transform <object> - pozwala zmienic polozenie obiektu za pomoca WSAD, ENTER i BACKSPACE\n render - renderuje\n rotate animate <object> <speed> - nieskonczona rotacja obiektu o okreslonej predkosci\n rotate transform <object> - rotowanie i zmienianie polozenia obieku za pomoca wsad i strzalek jednoczesnie\n rotate <object> local - rotowanie obiektu lokalnie\n rotate object <object> around x y z - pozwala obracac obiekt dookola wektora x y z\n rotate <object> x y z local - obraca obiekt o x y z lokalnie\n set camera <name> - pozwala ustawic kamere ktora ma byc uzywana ");
+                            }
+                            break;
+                        case "set":
+                            {
+                                if (commandd[1] == "camera")
+                                {
+                                    foreach (Camera x in Scene.currentScene.CameraList)
                                     {
-                                        Camera.setCurrentCamera(x);
-                                        Console.WriteLine("The camera of name " + x.name + " has been set." );
+                                        if (x.name == commandd[2])
+                                        {
+                                            Camera.setCurrentCamera(x);
+                                            Console.WriteLine("The camera of name " + x.name + " has been set.");
+                                        }
                                     }
                                 }
                             }
-                        }
-                        break;
+                            break;
                         case "load":
                             {
                                 bool loaded = false;
@@ -142,8 +156,8 @@ namespace w451k_ch07
                             {
                                 if (commandd.Length == 10)
                                 {
-                                    Camera cam1 = new Camera(new Vector3(double.Parse(commandd[2]), double.Parse(commandd[3]), double.Parse(commandd[4])), new Vector3(double.Parse(commandd[5]), double.Parse(commandd[6]), double.Parse(commandd[7])), double.Parse(commandd[8]), commandd[9]);
-                                    Scene.currentScene.CameraList.Add(cam1);
+                                    Camera cam = new Camera(new Vector3(double.Parse(commandd[2]), double.Parse(commandd[3]), double.Parse(commandd[4])), new Vector3(double.Parse(commandd[5]), double.Parse(commandd[6]), double.Parse(commandd[7])), double.Parse(commandd[8]), commandd[9]);
+                                    Scene.currentScene.CameraList.Add(cam);
                                     Console.WriteLine("The camera has been created successfully");
                                     Console.ReadKey();
                                 }
@@ -229,12 +243,12 @@ namespace w451k_ch07
                             }
                             break;
                         case "connect":
-                            if (commandd.Length == 4)
+                            if (commandd.Length == 5)
                                 foreach (Object x in Scene.currentScene.ObjectList)
                                 {
                                     if (x.name == commandd[3])
                                     {
-                                        x.connectVerts(new int[] { int.Parse(commandd[1]), int.Parse(commandd[2]) });
+                                        x.connectVerts(new int[] { int.Parse(commandd[1]), int.Parse(commandd[2]), int.Parse(commandd[3])});
                                         Console.WriteLine("Verts have been connected successfully");
                                         Console.ReadKey();
                                     }
@@ -397,7 +411,7 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(0, 1, 0));
+                                                        x.transformGlobal(new Vector3(-1, 0, 0));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
                                                             foreach (Triangle3 y in z.triangles)
@@ -452,14 +466,13 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(-1, 0, 0));
+                                                        x.transformGlobal(new Vector3(0, 1, 0));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
                                                             foreach (Triangle3 y in z.triangles)
                                                             {
                                                                 foreach (Line3 d in y.lines)
                                                                 {
-
                                                                     render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
                                                                 }
                                                             }
@@ -507,18 +520,14 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(0, -1, 0));
+                                                        x.transformGlobal(new Vector3(1, 0, 0));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
-                                                            if (z.name == commandd[1])
+                                                            foreach (Triangle3 y in z.triangles)
                                                             {
-                                                                foreach (Triangle3 y in z.triangles)
+                                                                foreach (Line3 d in y.lines)
                                                                 {
-                                                                    foreach (Line3 d in y.lines)
-                                                                    {
-
-                                                                        render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                    }
+                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
                                                                 }
                                                             }
                                                         }
@@ -567,7 +576,7 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(1, 0, 0));
+                                                        x.transformGlobal(new Vector3(0, -1, 0));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
                                                             foreach (Triangle3 y in z.triangles)
@@ -622,7 +631,7 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(0, 0, -1));
+                                                        x.transformGlobal(new Vector3(0, 0, 1));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
                                                             foreach (Triangle3 y in z.triangles)
@@ -677,7 +686,7 @@ namespace w451k_ch07
 
                                                     if (render.wireframe)
                                                     {
-                                                        x.transformGlobal(new Vector3(0, 0, 1));
+                                                        x.transformGlobal(new Vector3(0, 0, -1));
                                                         foreach (Object z in Scene.currentScene.ObjectList)
                                                         {
                                                             foreach (Triangle3 y in z.triangles)
@@ -733,30 +742,49 @@ namespace w451k_ch07
                             break;
                         case "render":
                             {
+                                if (render.wireframe)
+                                {
+                                    foreach (Object z in Scene.currentScene.ObjectList)
+                                    {
+                                        foreach (Triangle3 y in z.triangles)
+                                        {
+                                            foreach (Line3 d in y.lines)
+                                            {
 
-                            List<Triangle3> toprojectC = new List<Triangle3>();
-                            foreach (Object x in Scene.currentScene.ObjectList)
-                            {
-                                x.calculateLight();
-                                toprojectC.AddRange(x.getProjectedFaces());
+                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
+                                            }
+                                        }
+                                    }
+                                    render.renderFastAsFuck();
+                                }
+                                else
+                                {
+                                    List<Triangle3> toprojectB = new List<Triangle3>();
+                                    foreach (Object o in Scene.currentScene.ObjectList)
+                                    {
+                                        o.calculateLight();
+                                        toprojectL.AddRange(o.getProjectedFaces());
 
+                                    }
+                                    Triangle3[] toprojectC = toprojectL.ToArray();
+                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
+                                    toprojectL = toprojectA.ToList();
+                                    toprojectL.Reverse();
+
+                                    foreach (Triangle3 y in toprojectL)
+                                    {
+
+
+                                        render.FillTriangle(
+                                            y.p1.projectSimple(),
+                                            y.p2.projectSimple(),
+                                            y.p3.projectSimple()
+                                            , y.sym);
+
+                                    }
+                                    render.renderFastAsFuck();
+                                }
                             }
-                            Triangle3[] toprojectZ = toprojectC.ToArray();
-                            Math3D.timSort(ref toprojectZ, toprojectZ.Length);
-                            toprojectA.Reverse();
-                            foreach (Triangle3 y in toprojectZ.ToList())
-                            {
-
-
-                                render.FillTriangle(
-                                    y.p1.projectSimple(),
-                                    y.p2.projectSimple(),
-                                    y.p3.projectSimple()
-                                    , y.sym);
-
-                            }
-                            render.renderFastAsFuck();
-                        }
                             break;
                         case "rotate":
                             {
@@ -779,7 +807,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.rotateAround(new Vector3(0.05, 0, 0), point);
+                                                                x.rotateAround(new Vector3(0, -0.05, 0), point);
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -829,7 +857,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.rotateAround(new Vector3(-0.05, 0, 0), point);
+                                                                x.rotateAround(new Vector3(0, 0.05, 0), point);
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -879,7 +907,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.rotateAround(new Vector3(0, 0.05, 0), point);
+                                                                x.rotateAround(new Vector3(-0.05, 0, 0), point);
 
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
@@ -930,7 +958,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.rotateAround(new Vector3(0, -0.05, 0), point);
+                                                                x.rotateAround(new Vector3(0.05, 0, 0), point);
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -983,8 +1011,69 @@ namespace w451k_ch07
                                     }
                                 }
                                 else if (commandd[1] == "animate")
-                                {
-                                    if (commandd.Length == 4)
+                                {   
+                                    if(commandd.Length == 5)
+                                    {
+                                        if(commandd[2] == "x")
+                                        {
+                                            foreach (Object x in Scene.currentScene.ObjectList)
+                                            {
+                                                if (x.name == commandd[3])
+                                                {
+                                                    Thread rend1 = new Thread(startrnd);
+                                                    rend1.Start();
+                                                    while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+                                                    {
+                                                        x.calculateLight();
+                                                        x.rotateX(Double.Parse(commandd[4]));
+                                                        Thread.Sleep(14);
+                                                    }
+                                                    rend1.Abort();
+                                                }
+                                            }
+                                        }
+                                        else if(commandd[2] == "y")
+                                        {
+                                            foreach (Object x in Scene.currentScene.ObjectList)
+                                            {
+                                                if (x.name == commandd[3])
+                                                {
+                                                    Thread rend1 = new Thread(startrnd);
+                                                    rend1.Start();
+                                                    while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+                                                    {
+                                                        x.calculateLight();
+                                                        x.rotateY(Double.Parse(commandd[4]));
+                                                        Thread.Sleep(14);
+                                                    }
+                                                    rend1.Abort();
+                                                }
+                                            }
+                                        }
+                                        else if(commandd[2] == "z")
+                                        {
+                                            foreach (Object x in Scene.currentScene.ObjectList)
+                                            {
+                                                if (x.name == commandd[3])
+                                                {
+                                                    Thread rend1 = new Thread(startrnd);
+                                                    rend1.Start();
+                                                    while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+                                                    {
+                                                        x.calculateLight();
+                                                        x.rotateZ(Double.Parse(commandd[4]));
+                                                        Thread.Sleep(14);
+                                                    }
+                                                    rend1.Abort();
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("no such command");
+                                        }
+                                    }
+                                    else if (commandd.Length == 4)
                                     {
                                         foreach (Object x in Scene.currentScene.ObjectList)
                                         {
@@ -1025,7 +1114,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateX(0.05);
+                                                                    x.rotateY(0.05);
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1082,7 +1171,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateX(-0.05);
+                                                                    x.rotateY(-0.05);
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1139,7 +1228,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateY(-0.05);
+                                                                    x.rotateX(-0.05);
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1196,7 +1285,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateY(0.05);
+                                                                    x.rotateX(0.05);
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1252,7 +1341,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(0, 1, 0));
+                                                                x.transformGlobal(new Vector3(-1, 0, 0));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1307,7 +1396,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(-1, 0, 0));
+                                                                x.transformGlobal(new Vector3(0, 1, 0));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1362,7 +1451,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(0, -1, 0));
+                                                                x.transformGlobal(new Vector3(1, 0, 0));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1417,7 +1506,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(1, 0, 0));
+                                                                x.transformGlobal(new Vector3(0, -1, 0));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1472,7 +1561,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(0, 0, -1));
+                                                                x.transformGlobal(new Vector3(0, 0, 1));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1527,7 +1616,7 @@ namespace w451k_ch07
 
                                                             if (render.wireframe)
                                                             {
-                                                                x.transformGlobal(new Vector3(0, 0, 1));
+                                                                x.transformGlobal(new Vector3(0, 0, -1));
                                                                 foreach (Object z in Scene.currentScene.ObjectList)
                                                                 {
                                                                     foreach (Triangle3 y in z.triangles)
@@ -1598,7 +1687,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateLocal(new Vector3(0.05, 0, 0));
+                                                                    x.rotateLocal(new Vector3(0, 0.05, 0));
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1648,7 +1737,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateLocal(new Vector3(-0.05, 0, 0));
+                                                                    x.rotateLocal(new Vector3(0, -0.05, 0));
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1698,7 +1787,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateLocal(new Vector3(0, 0.05, 0));
+                                                                    x.rotateLocal(new Vector3(0.05, 0, 0));
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1748,7 +1837,7 @@ namespace w451k_ch07
 
                                                                 if (render.wireframe)
                                                                 {
-                                                                    x.rotateLocal(new Vector3(0, -0.05, 0));
+                                                                    x.rotateLocal(new Vector3(-0.05, 0, 0));
                                                                     foreach (Object z in Scene.currentScene.ObjectList)
                                                                     {
                                                                         foreach (Triangle3 y in z.triangles)
@@ -1756,29 +1845,29 @@ namespace w451k_ch07
                                                                             foreach (Line3 d in y.lines)
                                                                             {
 
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
+                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
                                                                 }
-                                                                else
-                                                                {
-                                                                    x.rotateLocal(new Vector3(0, 0.05, 0));
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
+                                                            }
+                                                        }
+                                                        render.renderFastAsFuck();
+                                                    }
+                                                    else
+                                                    {
+                                                        x.transformGlobal(new Vector3(0, 0, -1));
+                                                        List<Triangle3> toprojectB = new List<Triangle3>();
+                                                        foreach (Object o in Scene.currentScene.ObjectList)
+                                                        {
+                                                            o.calculateLight();
+                                                            toprojectL.AddRange(o.getProjectedFaces());
 
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
+                                                        }
+                                                        Triangle3[] toprojectC = toprojectL.ToArray();
+                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
+                                                        toprojectL = toprojectA.ToList();
+                                                        toprojectL.Reverse();
 
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
+                                                        foreach (Triangle3 y in toprojectL)
+                                                        {
 
 
                                                                         render.FillTriangle(
@@ -1811,7 +1900,7 @@ namespace w451k_ch07
                                             render.ClearScreen();
 
                                             if (render.wireframe)
-                                                x.rotateLocal(new Vector3(-Convert.ToDouble(commandd[2]), -Convert.ToDouble(commandd[3]), -Convert.ToDouble(commandd[4])));
+                                                x.rotateLocal(new Vector3(Convert.ToDouble(commandd[2]), Convert.ToDouble(commandd[3]), Convert.ToDouble(commandd[4])));
                                             foreach (Object z in Scene.currentScene.ObjectList)
                                             {
                                                 foreach (Triangle3 y in z.triangles)
@@ -1910,7 +1999,7 @@ namespace w451k_ch07
                                     }
                                 }
                                 break;
-                            
+
                             }
 
                         default:
@@ -1923,14 +2012,14 @@ namespace w451k_ch07
 
 
                 }
-            }
-            /*
                 catch (Exception)
                 {
                     Console.Clear();
                     Console.WriteLine("Try again");
-                }*/
-        
+                }
+
+            }
+        }
 
             static void startrnd()
         {
