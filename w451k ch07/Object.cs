@@ -8,7 +8,7 @@ namespace w451k_ch07
 {
     public class Object
     {
-        public readonly string name = "";
+        public readonly String name = "";
         public Vector3 location = new Vector3(0, 0, 0);
         public Vector3 origin = new Vector3(15, 15, 15);
         Vector3 rotation = new Vector3(0, 0, 0);
@@ -25,6 +25,7 @@ namespace w451k_ch07
             name = _name;
             location = _location;
             rotation = _rotation;
+
         }
 
         public void addVert(Point3D x)
@@ -88,19 +89,31 @@ namespace w451k_ch07
                 z.setGlobal(x);
             }
         }
-        public void rotateX(double rotation)
+
+
+
+
+
+
+
+
+        void rotateX(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
             foreach (Point3D z in verticies)
             {
+
+                
                 double newx = z.global.x;
                 double newy = (z.global.y * anglecos) - (z.global.z * anglesin);
                 double newz = (z.global.z * anglecos) + (z.global.y * anglesin);
+
+
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        public void rotateX(double rotation, Vector3 point)
+        void rotateX(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -119,7 +132,7 @@ namespace w451k_ch07
 
 
 
-        public void rotateY(double rotation)
+        void rotateY(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -135,7 +148,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        public void rotateY(double rotation, Vector3 point)
+        void rotateY(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -152,7 +165,7 @@ namespace w451k_ch07
 
 
 
-        public void rotateZ(double rotation)
+        void rotateZ(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -168,7 +181,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        public void rotateZ(double rotation, Vector3 point)
+        void rotateZ(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -293,9 +306,8 @@ namespace w451k_ch07
 
                 if (line[0] == 'v')
                 {
-                    line = line.Replace(".", ",");
+
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
-                    
                     verts.Add(new Point3D(location,
                         Convert.ToDouble(numbers[1]) * scale,
                         Convert.ToDouble(numbers[3]) * scale,
@@ -306,13 +318,13 @@ namespace w451k_ch07
                 }
                 if (line[0] == 'f')
                 {
-                    line = line.Replace(".", ",");
+
                     string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
 
                     trig.Add(new Triangle3(
-                        verts[int.Parse(numbers[1]) - 1],
-                        verts[int.Parse(numbers[3]) - 1],
-                        verts[int.Parse(numbers[5]) - 1]
+                        verts[Convert.ToInt32(numbers[1]) - 1],
+                        verts[Convert.ToInt32(numbers[3]) - 1],
+                        verts[Convert.ToInt32(numbers[5]) - 1]
                         ));
 
 
@@ -321,6 +333,7 @@ namespace w451k_ch07
 
             }
 
+            reader.Close();
 
             triangles.AddRange(trig);
 
