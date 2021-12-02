@@ -97,7 +97,7 @@ namespace w451k_ch07
 
 
 
-        void rotateX(double rotation)
+        public void rotateX(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -113,7 +113,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateX(double rotation, Vector3 point)
+        public void rotateX(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -132,7 +132,7 @@ namespace w451k_ch07
 
 
 
-        void rotateY(double rotation)
+        public void rotateY(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -148,7 +148,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateY(double rotation, Vector3 point)
+        public void rotateY(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -165,7 +165,7 @@ namespace w451k_ch07
 
 
 
-        void rotateZ(double rotation)
+        public void rotateZ(double rotation)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -181,7 +181,7 @@ namespace w451k_ch07
                 z.global = new Vector3(newx, newy, newz);
             }
         }
-        void rotateZ(double rotation, Vector3 point)
+        public void rotateZ(double rotation, Vector3 point)
         {
             double anglecos = Math.Cos(rotation);
             double anglesin = Math.Sin(rotation);
@@ -302,31 +302,63 @@ namespace w451k_ch07
             string line = reader.ReadLine();
             while ((line = reader.ReadLine()) != null)
             {
-
-
-                if (line[0] == 'v')
+                try
                 {
+                    if (line[0] == 'v')
+                    {
 
-                    string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
-                    verts.Add(new Point3D(location,
-                        Convert.ToDouble(numbers[1]) * scale,
-                        Convert.ToDouble(numbers[3]) * scale,
-                        Convert.ToDouble(numbers[5]) * scale
-                        ));
+                        string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                        verts.Add(new Point3D(location,
+                            Convert.ToDouble(numbers[1]) * scale,
+                            Convert.ToDouble(numbers[3]) * scale,
+                            Convert.ToDouble(numbers[5]) * scale
+                            ));
 
 
-                }
-                if (line[0] == 'f')
+                    }
+                    if (line[0] == 'f')
+                    {
+
+                        string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+
+                        trig.Add(new Triangle3(
+                            verts[Convert.ToInt32(numbers[1]) - 1],
+                            verts[Convert.ToInt32(numbers[3]) - 1],
+                            verts[Convert.ToInt32(numbers[5]) - 1]
+                            ));
+
+
+                    }
+
+                }catch(FormatException)
                 {
+                    line = line.Replace(".", ",");
+                    if (line[0] == 'v')
+                    {
 
-                    string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                        string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+                        verts.Add(new Point3D(location,
+                            Convert.ToDouble(numbers[1]) * scale,
+                            Convert.ToDouble(numbers[3]) * scale,
+                            Convert.ToDouble(numbers[5]) * scale
+                            ));
 
-                    trig.Add(new Triangle3(
-                        verts[Convert.ToInt32(numbers[1]) - 1],
-                        verts[Convert.ToInt32(numbers[3]) - 1],
-                        verts[Convert.ToInt32(numbers[5]) - 1]
-                        ));
 
+                    }
+                    line = line.Replace(".", ",");
+                    if (line[0] == 'f')
+                    {
+
+                        string[] numbers = Regex.Split(line, @"(-?[0-9]+(?:[,.][0-9]+)?)");
+
+                        trig.Add(new Triangle3(
+                            verts[Convert.ToInt32(numbers[1]) - 1],
+                            verts[Convert.ToInt32(numbers[3]) - 1],
+                            verts[Convert.ToInt32(numbers[5]) - 1]
+                            ));
+
+
+                    }
 
                 }
 
