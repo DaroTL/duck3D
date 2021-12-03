@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace w451k_ch07
+namespace Duck
 {
 
     public class Triangle2

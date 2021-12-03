@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using w451k_ch07.three_dimension_menagment;
+using Duck.three_dimension_menagment;
 
-namespace w451k_ch07
+namespace Duck
 {
     public class Program
     {
@@ -25,7 +25,7 @@ namespace w451k_ch07
 
             mainScene.ObjectList.Add(tytul);
 
-            
+            //ta sciezke zmienic
             tytul.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
 
             tytul.rotate(new Vector3(0, 0.3, 0));
@@ -38,42 +38,11 @@ namespace w451k_ch07
 
 
             Thread rend = new Thread(startrnd);
-            List<Triangle3> toprojectL = new List<Triangle3>();
-            foreach (Object x in Scene.currentScene.ObjectList)
-            {
-                x.calculateLight();
-                toprojectL.AddRange(x.getProjectedFaces());
+            Rndr();
+            render.ClearScreen();
 
-            }
-            Triangle3[] toprojectA = toprojectL.ToArray();
-            Math3D.timSort(ref toprojectA, toprojectA.Length);
-            toprojectA.Reverse();
-            foreach (Triangle3 y in toprojectA.ToList())
-            {
-
-
-                render.FillTriangle(
-                    y.p1.projectSimple(),
-                    y.p2.projectSimple(),
-                    y.p3.projectSimple()
-                    , y.sym);
-
-            }
-            render.renderFastAsFuck();
 
             Scene.currentScene.ObjectList.Remove(tytul);
-            /*
-            rend.Start();
-            
-            
-            for (; ; )
-            {
-                cube.calculateLight();
-                cube.rotate(new Vector3(0.01, 0.01, 0.01));
-                dik.rotate(new Vector3(-0.01, -0.01, -0.01));
-                Thread.Sleep(14);
-            }
-            */
 
 
             for (; ; )
@@ -85,6 +54,20 @@ namespace w451k_ch07
                     Console.Clear();
                     switch (commandd[0])
                     {
+                        case "test":
+
+                            Object duck = new Object("duck", new Vector3(-50, 0, 75), new Vector3(0, 0, 0));
+                            Object monke = new Object("monke", new Vector3(40, 0, 30), new Vector3(0, 0, 0));
+
+                            mainScene.ObjectList.Add(duck);
+                            mainScene.ObjectList.Add(monke);
+
+                            //ta sciezke zmienic
+                            duck.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\duck.obj");
+                            monke.LoadFromObjFile("C:\\Users\\darre\\source\\repos\\w451k-hu7\\w451k ch07\\monke.obj");
+                            Rndr();
+                            break;
+
                         case "wireframe":
                             {
                                 if(render.wireframe == false)
@@ -117,6 +100,10 @@ namespace w451k_ch07
                                             Console.WriteLine("The camera of name " + x.name + " has been set.");
                                         }
                                     }
+                                }
+                                if(commandd[1] == "scale")
+                                {
+                                    render.scale = float.Parse(commandd[2]);
                                 }
                             }
                             break;
@@ -156,8 +143,8 @@ namespace w451k_ch07
                             {
                                 if (commandd.Length == 10)
                                 {
-                                    Camera cam = new Camera(new Vector3(double.Parse(commandd[2]), double.Parse(commandd[3]), double.Parse(commandd[4])), new Vector3(double.Parse(commandd[5]), double.Parse(commandd[6]), double.Parse(commandd[7])), double.Parse(commandd[8]), commandd[9]);
-                                    Scene.currentScene.CameraList.Add(cam);
+                                    Camera camX = new Camera(new Vector3(double.Parse(commandd[2]), double.Parse(commandd[3]), double.Parse(commandd[4])), new Vector3(double.Parse(commandd[5]), double.Parse(commandd[6]), double.Parse(commandd[7])), double.Parse(commandd[8]), commandd[9]);
+                                    Scene.currentScene.CameraList.Add(camX);
                                     Console.WriteLine("The camera has been created successfully");
                                     Console.ReadKey();
                                 }
@@ -253,18 +240,6 @@ namespace w451k_ch07
                                         Console.ReadKey();
                                     }
                                 }
-                            break;
-                        case "point":
-                            {
-                                int[] pen = usePen();
-                                Console.Clear();
-                                Console.SetCursorPosition(0, 0);
-                                for (int i = 0; i < pen.Length; i++)
-                                {
-                                    Console.Write(pen[i] + " ");
-                                }
-                                Console.WriteLine();
-                            }
                             break;
                         case "show":
                             {
@@ -407,53 +382,10 @@ namespace w451k_ch07
                                             {
                                                 if (x.name == commandd[1])
                                                 {
-                                                    render.ClearScreen();
-
-                                                    if (render.wireframe)
-                                                    {
-                                                        x.transformGlobal(new Vector3(-1, 0, 0));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
-
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, -1, 0));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
 
 
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
-
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-
+                                                    x.transformGlobal(new Vector3(0, -1, 0));
+                                                    Rndr();
                                                 }
                                             }
                                             break;
@@ -464,49 +396,9 @@ namespace w451k_ch07
                                                 {
                                                     render.ClearScreen();
 
-                                                    if (render.wireframe)
-                                                    {
+
                                                         x.transformGlobal(new Vector3(0, 1, 0));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(1, 0, 0));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
-
-
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
-
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
+                                                    Rndr();
 
                                                 }
                                             }
@@ -517,52 +409,9 @@ namespace w451k_ch07
                                                 if (x.name == commandd[1])
                                                 {
                                                     render.ClearScreen();
+                                                    x.transformGlobal(new Vector3(1, 0, 0));
 
-                                                    if (render.wireframe)
-                                                    {
-                                                        x.transformGlobal(new Vector3(1, 0, 0));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, 1, 0));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            if (o.name == commandd[1])
-                                                            {
-                                                                o.calculateLight();
-                                                                toprojectL.AddRange(o.getProjectedFaces());
-                                                            }
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
-
-
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
-
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
+                                                    Rndr();
 
                                                 }
                                             }
@@ -573,51 +422,9 @@ namespace w451k_ch07
                                                 if (x.name == commandd[1])
                                                 {
                                                     render.ClearScreen();
+                                                    x.transformGlobal(new Vector3(-1, 0, 0));
 
-                                                    if (render.wireframe)
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, -1, 0));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
-
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(-1, 0, 0));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
-
-
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
-
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
+                                                    Rndr();
 
                                                 }
                                             }
@@ -627,52 +434,12 @@ namespace w451k_ch07
                                             {
                                                 if (x.name == commandd[1])
                                                 {
-                                                    render.ClearScreen();
-
-                                                    if (render.wireframe)
-                                                    {
+ 
                                                         x.transformGlobal(new Vector3(0, 0, 1));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
-
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, 0, 1));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
 
 
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
+                                                    Rndr();
 
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
 
                                                 }
                                             }
@@ -684,50 +451,9 @@ namespace w451k_ch07
                                                 {
                                                     render.ClearScreen();
 
-                                                    if (render.wireframe)
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, 0, -1));
-                                                        foreach (Object z in Scene.currentScene.ObjectList)
-                                                        {
-                                                            foreach (Triangle3 y in z.triangles)
-                                                            {
-                                                                foreach (Line3 d in y.lines)
-                                                                {
+                                                    x.transformGlobal(new Vector3(0, 0, -1));
 
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, 0, -1));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
-
-
-                                                            render.FillTriangle(
-                                                                y.p1.projectSimple(),
-                                                                y.p2.projectSimple(),
-                                                                y.p3.projectSimple()
-                                                                , y.sym);
-
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
+                                                    Rndr();
 
                                                 }
                                             }
@@ -742,48 +468,10 @@ namespace w451k_ch07
                             break;
                         case "render":
                             {
-                                if (render.wireframe)
-                                {
-                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                    {
-                                        foreach (Triangle3 y in z.triangles)
-                                        {
-                                            foreach (Line3 d in y.lines)
-                                            {
 
-                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                            }
-                                        }
-                                    }
-                                    render.renderFastAsFuck();
-                                }
-                                else
-                                {
-                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                    {
-                                        o.calculateLight();
-                                        toprojectL.AddRange(o.getProjectedFaces());
+                                    render.ClearScreen();
+                                    Rndr();
 
-                                    }
-                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                    toprojectL = toprojectA.ToList();
-                                    toprojectL.Reverse();
-
-                                    foreach (Triangle3 y in toprojectL)
-                                    {
-
-
-                                        render.FillTriangle(
-                                            y.p1.projectSimple(),
-                                            y.p2.projectSimple(),
-                                            y.p3.projectSimple()
-                                            , y.sym);
-
-                                    }
-                                    render.renderFastAsFuck();
-                                }
                             }
                             break;
                         case "rotate":
@@ -804,202 +492,32 @@ namespace w451k_ch07
                                                     case ConsoleKey.DownArrow:
                                                         {
                                                             render.ClearScreen();
-
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.rotateAround(new Vector3(0, -0.05, 0), point);
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
                                                                 x.rotateAround(new Vector3(-0.05, 0, 0), new Vector3(-point.x, -point.y, -point.z));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            Rndr();
                                                         }
                                                         break;
                                                     case ConsoleKey.UpArrow:
                                                         {
                                                             render.ClearScreen();
-
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.rotateAround(new Vector3(0, 0.05, 0), point);
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.rotateAround(new Vector3(0.05, 0, 0), point);
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            x.rotateAround(new Vector3(0, 0.05, 0), point);
+                                                            Rndr();
                                                         }
                                                         break;
                                                     case ConsoleKey.RightArrow:
                                                         {
                                                             render.ClearScreen();
 
-                                                            if (render.wireframe)
-                                                            {
+
                                                                 x.rotateAround(new Vector3(-0.05, 0, 0), point);
-
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.rotateAround(new Vector3(0, -0.05, 0), point);
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            Rndr();
                                                         }
                                                         break;
                                                     case ConsoleKey.LeftArrow:
                                                         {
                                                             render.ClearScreen();
 
-                                                            if (render.wireframe)
-                                                            {
                                                                 x.rotateAround(new Vector3(0.05, 0, 0), point);
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.rotateAround(new Vector3(0, 0.05, 0), point);
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            Rndr();
                                                         }
                                                         break;
                                                     case ConsoleKey.Escape:
@@ -1104,120 +622,6 @@ namespace w451k_ch07
                                             var key = Console.ReadKey(false).Key;
                                             switch (key)
                                             {
-                                                case ConsoleKey.UpArrow:
-                                                    {
-                                                        foreach (Object x in Scene.currentScene.ObjectList)
-                                                        {
-                                                            if (x.name == commandd[2])
-                                                            {
-                                                                render.ClearScreen();
-
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateY(0.05);
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateX(0.05);
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-                                                    break;
-                                                case ConsoleKey.DownArrow:
-                                                    {
-                                                        foreach (Object x in Scene.currentScene.ObjectList)
-                                                        {
-                                                            if (x.name == commandd[2])
-                                                            {
-                                                                render.ClearScreen();
-
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateY(-0.05);
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateX(-0.05);
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-                                                    break;
                                                 case ConsoleKey.RightArrow:
                                                     {
                                                         foreach (Object x in Scene.currentScene.ObjectList)
@@ -1225,51 +629,8 @@ namespace w451k_ch07
                                                             if (x.name == commandd[2])
                                                             {
                                                                 render.ClearScreen();
-
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateX(-0.05);
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateY(-0.05);
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
+                                                                x.rotateY(0.05);
+                                                                Rndr();
 
                                                             }
                                                         }
@@ -1282,162 +643,50 @@ namespace w451k_ch07
                                                             if (x.name == commandd[2])
                                                             {
                                                                 render.ClearScreen();
-
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateX(0.05);
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateY(0.05);
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
+                                                                x.rotateY(-0.05);
+                                                                Rndr();
 
                                                             }
                                                         }
                                                     }
                                                     break;
-                                                case ConsoleKey.S:
-                                                    foreach (Object x in Scene.currentScene.ObjectList)
+                                                case ConsoleKey.DownArrow:
                                                     {
-                                                        if (x.name == commandd[2])
+                                                        foreach (Object x in Scene.currentScene.ObjectList)
                                                         {
-                                                            render.ClearScreen();
-
-                                                            if (render.wireframe)
+                                                            if (x.name == commandd[2])
                                                             {
-                                                                x.transformGlobal(new Vector3(-1, 0, 0));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
+                                                                render.ClearScreen();
+                                                                x.rotateX(-0.05);
+                                                                Rndr();
+          
 
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
                                                             }
-                                                            else
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, -1, 0));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-
                                                         }
                                                     }
                                                     break;
-                                                case ConsoleKey.D:
+                                                case ConsoleKey.UpArrow:
+                                                    {
+                                                        foreach (Object x in Scene.currentScene.ObjectList)
+                                                        {
+                                                            if (x.name == commandd[2])
+                                                            {
+                                                                render.ClearScreen();
+                                                                x.rotateX(0.05);
+                                                                Rndr();
+
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                case ConsoleKey.A:
                                                     foreach (Object x in Scene.currentScene.ObjectList)
                                                     {
                                                         if (x.name == commandd[2])
                                                         {
                                                             render.ClearScreen();
-
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, 1, 0));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.transformGlobal(new Vector3(1, 0, 0));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            x.transformGlobal(new Vector3(-1, 0, 0));
+                                                            Rndr();
 
                                                         }
                                                     }
@@ -1449,105 +698,36 @@ namespace w451k_ch07
                                                         {
                                                             render.ClearScreen();
 
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.transformGlobal(new Vector3(1, 0, 0));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
                                                                 x.transformGlobal(new Vector3(0, 1, 0));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            Rndr();
 
                                                         }
                                                     }
                                                     break;
-                                                case ConsoleKey.A:
+                                                case ConsoleKey.D:
                                                     foreach (Object x in Scene.currentScene.ObjectList)
                                                     {
                                                         if (x.name == commandd[2])
                                                         {
                                                             render.ClearScreen();
 
-                                                            if (render.wireframe)
-                                                            {
+
+                                                                x.transformGlobal(new Vector3(1, 0, 0));
+                                                            Rndr();
+
+                                                        }
+                                                    }
+                                                    break;
+                                                case ConsoleKey.S:
+                                                    foreach (Object x in Scene.currentScene.ObjectList)
+                                                    {
+                                                        if (x.name == commandd[2])
+                                                        {
+                                                            render.ClearScreen();
+
+
                                                                 x.transformGlobal(new Vector3(0, -1, 0));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.transformGlobal(new Vector3(-1, 0, 0));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            Rndr();
 
                                                         }
                                                     }
@@ -1558,51 +738,8 @@ namespace w451k_ch07
                                                         if (x.name == commandd[2])
                                                         {
                                                             render.ClearScreen();
-
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, 0, 1));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, 0, 1));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            x.transformGlobal(new Vector3(0, 0, 1));
+                                                            Rndr();
 
                                                         }
                                                     }
@@ -1613,51 +750,9 @@ namespace w451k_ch07
                                                         if (x.name == commandd[2])
                                                         {
                                                             render.ClearScreen();
-
-                                                            if (render.wireframe)
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, 0, -1));
-                                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    foreach (Triangle3 y in z.triangles)
-                                                                    {
-                                                                        foreach (Line3 d in y.lines)
-                                                                        {
-
-                                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                        }
-                                                                    }
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
-                                                            else
-                                                            {
-                                                                x.transformGlobal(new Vector3(0, 0, -1));
-                                                                List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                                {
-                                                                    o.calculateLight();
-                                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                }
-                                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                toprojectL = toprojectA.ToList();
-                                                                toprojectL.Reverse();
-
-                                                                foreach (Triangle3 y in toprojectL)
-                                                                {
-
-
-                                                                    render.FillTriangle(
-                                                                        y.p1.projectSimple(),
-                                                                        y.p2.projectSimple(),
-                                                                        y.p3.projectSimple()
-                                                                        , y.sym);
-
-                                                                }
-                                                                render.renderFastAsFuck();
-                                                            }
+                                                            x.transformGlobal(new Vector3(0, 0, -1));
+                                                            Rndr();
+                                                            
 
                                                         }
                                                     }
@@ -1684,201 +779,34 @@ namespace w451k_ch07
                                                         case ConsoleKey.DownArrow:
                                                             {
                                                                 render.ClearScreen();
+                                                                x.rotateLocal(new Vector3(0, 0.05, 0));
+                                                                Rndr();
 
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateLocal(new Vector3(0, 0.05, 0));
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateLocal(new Vector3(-0.05, 0, 0));
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
                                                             }
                                                             break;
                                                         case ConsoleKey.UpArrow:
                                                             {
                                                                 render.ClearScreen();
-
-                                                                if (render.wireframe)
-                                                                {
-                                                                    x.rotateLocal(new Vector3(0, -0.05, 0));
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateLocal(new Vector3(0.05, 0, 0));
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
+                                                                x.rotateLocal(new Vector3(0, -0.05, 0));
+                                                                Rndr();
                                                             }
                                                             break;
                                                         case ConsoleKey.RightArrow:
                                                             {
                                                                 render.ClearScreen();
 
-                                                                if (render.wireframe)
-                                                                {
+
                                                                     x.rotateLocal(new Vector3(0.05, 0, 0));
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                                render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
-                                                                else
-                                                                {
-                                                                    x.rotateLocal(new Vector3(0, -0.05, 0));
-                                                                    List<Triangle3> toprojectB = new List<Triangle3>();
-                                                                    foreach (Object o in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        o.calculateLight();
-                                                                        toprojectL.AddRange(o.getProjectedFaces());
-
-                                                                    }
-                                                                    Triangle3[] toprojectC = toprojectL.ToArray();
-                                                                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                                    toprojectL = toprojectA.ToList();
-                                                                    toprojectL.Reverse();
-
-                                                                    foreach (Triangle3 y in toprojectL)
-                                                                    {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
+                                                                Rndr();
                                                             }
                                                             break;
                                                         case ConsoleKey.LeftArrow:
                                                             {
                                                                 render.ClearScreen();
 
-                                                                if (render.wireframe)
-                                                                {
+
                                                                     x.rotateLocal(new Vector3(-0.05, 0, 0));
-                                                                    foreach (Object z in Scene.currentScene.ObjectList)
-                                                                    {
-                                                                        foreach (Triangle3 y in z.triangles)
-                                                                        {
-                                                                            foreach (Line3 d in y.lines)
-                                                                            {
-
-                                                                    render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                                }
-                                                            }
-                                                        }
-                                                        render.renderFastAsFuck();
-                                                    }
-                                                    else
-                                                    {
-                                                        x.transformGlobal(new Vector3(0, 0, -1));
-                                                        List<Triangle3> toprojectB = new List<Triangle3>();
-                                                        foreach (Object o in Scene.currentScene.ObjectList)
-                                                        {
-                                                            o.calculateLight();
-                                                            toprojectL.AddRange(o.getProjectedFaces());
-
-                                                        }
-                                                        Triangle3[] toprojectC = toprojectL.ToArray();
-                                                        Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                        toprojectL = toprojectA.ToList();
-                                                        toprojectL.Reverse();
-
-                                                        foreach (Triangle3 y in toprojectL)
-                                                        {
-
-
-                                                                        render.FillTriangle(
-                                                                            y.p1.projectSimple(),
-                                                                            y.p2.projectSimple(),
-                                                                            y.p3.projectSimple()
-                                                                            , y.sym);
-
-                                                                    }
-                                                                    render.renderFastAsFuck();
-                                                                }
+                                                                Rndr();
                                                             }
                                                             break;
                                                         case ConsoleKey.Escape:
@@ -1898,49 +826,8 @@ namespace w451k_ch07
                                         if (x.name == commandd[1])
                                         {
                                             render.ClearScreen();
-
-                                            if (render.wireframe)
-                                                x.rotateLocal(new Vector3(Convert.ToDouble(commandd[2]), Convert.ToDouble(commandd[3]), Convert.ToDouble(commandd[4])));
-                                            foreach (Object z in Scene.currentScene.ObjectList)
-                                            {
-                                                foreach (Triangle3 y in z.triangles)
-                                                {
-                                                    foreach (Line3 d in y.lines)
-                                                    {
-
-                                                        render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                    }
-                                                }
-                                            }
-                                            render.renderFastAsFuck();
-                                        }
-                                        else
-                                        {
                                             x.rotateLocal(new Vector3(Convert.ToDouble(commandd[2]), Convert.ToDouble(commandd[3]), Convert.ToDouble(commandd[4])));
-                                            List<Triangle3> toprojectB = new List<Triangle3>();
-                                            foreach (Object o in Scene.currentScene.ObjectList)
-                                            {
-                                                o.calculateLight();
-                                                toprojectL.AddRange(o.getProjectedFaces());
-
-                                            }
-                                            Triangle3[] toprojectC = toprojectL.ToArray();
-                                            Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                            toprojectL = toprojectA.ToList();
-                                            toprojectL.Reverse();
-
-                                            foreach (Triangle3 y in toprojectL)
-                                            {
-
-
-                                                render.FillTriangle(
-                                                    y.p1.projectSimple(),
-                                                    y.p2.projectSimple(),
-                                                    y.p3.projectSimple()
-                                                    , y.sym);
-
-                                            }
-                                            render.renderFastAsFuck();
+                                            Rndr();
                                         }
                                     }
 
@@ -1952,49 +839,8 @@ namespace w451k_ch07
                                         if (x.name == commandd[1])
                                         {
                                             render.ClearScreen();
-
-                                            if (render.wireframe)
-                                            {
-                                                x.rotate(new Vector3(Convert.ToDouble(commandd[2]), Convert.ToDouble(commandd[3]), Convert.ToDouble(commandd[4])));
-                                                foreach (Object z in Scene.currentScene.ObjectList)
-                                                {
-                                                    foreach (Triangle3 y in z.triangles)
-                                                    {
-                                                        foreach (Line3 d in y.lines)
-                                                        {
-                                                            render.plotLine(new Line2(d.p1.projectSimple(), d.p2.projectSimple()));
-                                                        }
-                                                    }
-                                                }
-                                                render.renderFastAsFuck();
-                                            }
-                                            else
-                                            {
-                                                x.rotate(new Vector3(-Convert.ToDouble(commandd[2]), -Convert.ToDouble(commandd[3]), -Convert.ToDouble(commandd[4])));
-                                                foreach (Object o in Scene.currentScene.ObjectList)
-                                                {
-                                                    o.calculateLight();
-                                                    toprojectL.AddRange(o.getProjectedFaces());
-
-                                                }
-                                                Triangle3[] toprojectC = toprojectL.ToArray();
-                                                Math3D.timSort(ref toprojectA, toprojectA.Length);
-                                                toprojectL = toprojectA.ToList();
-                                                toprojectL.Reverse();
-
-                                                foreach (Triangle3 y in toprojectL)
-                                                {
-
-
-                                                    render.FillTriangle(
-                                                        y.p1.projectSimple(),
-                                                        y.p2.projectSimple(),
-                                                        y.p3.projectSimple()
-                                                        , y.sym);
-
-                                                }
-                                                render.renderFastAsFuck();
-                                            }
+                                            x.rotate(new Vector3(Convert.ToDouble(commandd[2]), Convert.ToDouble(commandd[3]), Convert.ToDouble(commandd[4])));
+                                            Rndr();
                                         }
                                     }
                                 }
@@ -2026,108 +872,39 @@ namespace w451k_ch07
 
             for (; ; )
             {
-                if (render.wireframe)
-                {
-                    foreach (Object x in Scene.currentScene.ObjectList)
-                    {
-                        foreach (Triangle3 y in x.triangles)
-                        {
-
-
-
-                            foreach (Line3 z in y.lines)
-                            {
-
-                                render.plotLine(new Line2(z.p1.projectSimple(), z.p2.projectSimple()));
-                            }
-                        }
-                    }
-                    render.renderFastAsFuckFrame();
-                }
-                else
-                {
-                    List<Triangle3> toprojectL = new List<Triangle3>();
-                    foreach (Object x in Scene.currentScene.ObjectList)
-                    {
-                        x.calculateLight();
-                        toprojectL.AddRange(x.getProjectedFaces());
-
-                    }
-                    Triangle3[] toprojectA = toprojectL.ToArray();
-                    Math3D.timSort(ref toprojectA, toprojectA.Length);
-                    toprojectL = toprojectA.ToList();
-                    toprojectL.Reverse();
-
-                    foreach (Triangle3 y in toprojectL)
-                    {
-
-
-                        render.FillTriangle(
-                            y.p1.projectSimple(),
-                            y.p2.projectSimple(),
-                            y.p3.projectSimple()
-                            , y.sym);
-
-                    }
-                    render.renderFastAsFuckFrame();
-                }
+                Rndr();
 
 
             }
         }
 
-        static int[] usePen()
+
+        public static void Rndr()
         {
-            for (; ; )
+            render.ClearScreen();
+            List<Triangle3> toprojectL = new List<Triangle3>();
+            foreach (Object x in Scene.currentScene.ObjectList)
             {
-                ConsoleKeyInfo pen = Console.ReadKey();
+                x.calculateLight();
+                toprojectL.AddRange(x.getProjectedFaces());
 
-                int y = Console.CursorTop, x = Console.CursorLeft;
-                if (pen.Key == ConsoleKey.F1) return new int[] { x, y };
-                
-                if (pen.Key == ConsoleKey.DownArrow)
-                {
-                    if (y >= (y + 1))
-                        Console.SetCursorPosition(x, y - 1 + 1);
-                    else
-                        Console.SetCursorPosition(x - 1, y + 1);
-
-                }
-
-                if (pen.Key == ConsoleKey.UpArrow)
-                {
-                    if (y <= 0)
-                        Console.SetCursorPosition(x, y + 1 - 1);
-                    else
-                        Console.SetCursorPosition(x - 1, y - 1);
-
-                }
-
-                if (pen.Key == ConsoleKey.RightArrow)
-                {
-                    if (x >= (x + 1))
-                        Console.SetCursorPosition(x - 2 + 1, y);
-                    else
-                        Console.SetCursorPosition(x + 1, y);
-
-                }
-
-                if (pen.Key == ConsoleKey.LeftArrow)
-                {
-                    if (x <= 0)
-                        Console.SetCursorPosition(x + 1 - 1, y);
-                    else
-                        Console.SetCursorPosition(x - 2, y);
-
-                }
-
-                if (x > Console.WindowWidth) Console.SetCursorPosition(x, (y + 1));
-                if (pen.Modifiers == ConsoleModifiers.Alt && pen.Key == ConsoleKey.F4) Environment.Exit(0);
-                if (pen.Key == ConsoleKey.Escape) break;
-
-                 
             }
-            return new int[]  { 0, 0 };
+            Triangle3[] toprojectA = toprojectL.ToArray();
+            Math3D.timSort(ref toprojectA, toprojectA.Length);
+            List<Triangle3> toprojectC = toprojectA.ToList();
+            toprojectC.Reverse();
+            foreach (Triangle3 y in toprojectC)
+            {
+
+
+                render.FillTriangle(
+                    y.p1.projectSimple(),
+                    y.p2.projectSimple(),
+                    y.p3.projectSimple()
+                    , y.sym);
+
+            }
+            render.renderFastAsFuck();
         }
     }
 }

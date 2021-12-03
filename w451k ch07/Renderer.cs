@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 
-namespace w451k_ch07
+namespace Duck
 {
     public class Renderer
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace w451k_ch07.three_dimension_menagment
+namespace Duck.three_dimension_menagment
 {
     class Polygon3
     {

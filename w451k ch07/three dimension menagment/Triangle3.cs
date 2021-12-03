@@ -1,8 +1,8 @@
 ﻿
 using System;
-using w451k_ch07.three_dimension_menagment;
+using Duck.three_dimension_menagment;
 
-namespace w451k_ch07
+namespace Duck
 {
     public class Triangle3
     {

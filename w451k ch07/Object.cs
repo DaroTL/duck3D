@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace w451k_ch07
+namespace Duck
 {
     public class Object
     {
@@ -283,6 +283,7 @@ namespace w451k_ch07
 
         public bool LoadFromObjFile(String sfilename)
         {
+            sfilename.Replace("\\", "\\\\");
             StreamReader reader = new StreamReader(sfilename);
             List<Point3D> verts = new List<Point3D>();
             List<Triangle3> trig = new List<Triangle3>();
@@ -360,7 +361,7 @@ namespace w451k_ch07
 
             verticies.AddRange(verts);
 
-            foreach (Triangle3 x in triangles) Console.WriteLine(x.p1.);
+
 
                 return true;
         }

@@ -3,7 +3,7 @@ using System.Text;
 using System.IO;
 
 
-namespace w451k_ch07
+namespace Duck
 {
     public static class FastConsole
     {

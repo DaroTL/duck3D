@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace w451k_ch07.three_dimension_menagment
+namespace Duck.three_dimension_menagment
 {
     public class Math3D
     {
